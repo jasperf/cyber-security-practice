@@ -16,6 +16,7 @@
   --red: #f5594f;
   --forensics: #29c5c9;
   --misc: #3ecf8e;
+  --lab: #f5a623;
   --text: #e8eaf0;
   --text-muted: #7a84a0;
   --text-dim: #4a5270;
@@ -155,6 +156,7 @@ h1 em { font-style: italic; color: var(--crypto); }
 .card.red::before       { background: var(--red); }
 .card.forensics::before { background: var(--forensics); }
 .card.misc::before      { background: var(--misc); }
+.card.lab::before       { background: var(--lab); }
 .card:hover { border-color: #3a4070; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.3); }
 .card:hover::before { opacity: 1; }
 
@@ -173,6 +175,8 @@ h1 em { font-style: italic; color: var(--crypto); }
 .icon-red       { background: rgba(245,89,79,0.12); }
 .icon-forensics { background: rgba(41,197,201,0.12); }
 .icon-misc      { background: rgba(62,207,142,0.12); }
+.icon-lab       { background: rgba(245,166,35,0.12); }
+.card-status.lab { border-color: rgba(245,166,35,0.4); color: var(--lab); background: rgba(245,166,35,0.06); }
 
 .card-status {
   font-family: var(--font-mono);
@@ -234,6 +238,7 @@ footer a:hover { color: var(--text); }
   <div class="nav-logo">Cyber<span>Sec</span> Practice</div>
   <div class="nav-links">
     <a href="#sessions">Sessions</a>
+    <a href="#labs">Labs</a>
     <a href="https://github.com/jasperf/cyber-security-practice" target="_blank">GitHub &#8599;</a>
   </div>
 </nav>
@@ -324,6 +329,25 @@ footer a:hover { color: var(--text); }
         <span class="chip">OSINT tools</span>
         <span class="chip">CTF mindset</span>
         <span class="chip">20 q &middot; 21 marks</span>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="grid-label" id="labs">Hands-On Labs</div>
+  <div class="grid">
+
+    <a href="labs/crypto-playground/crypto-playground.html" class="card lab">
+      <div class="card-top">
+        <div class="card-icon icon-lab">&#129514;</div>
+        <div class="card-status lab">&#9679; Interactive</div>
+      </div>
+      <div class="card-title">Crypto Playground<br>Session 1 companion</div>
+      <div class="card-meta">Hash, encode, break &amp; encrypt &mdash; live</div>
+      <div class="card-footer">
+        <span class="chip">ECB penguin</span>
+        <span class="chip">AES-GCM vault</span>
+        <span class="chip">6 CTF flags</span>
       </div>
     </a>
 
