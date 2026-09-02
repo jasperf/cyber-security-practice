@@ -8,3 +8,8 @@ material
 # Python cache from the sheet generator (build.py)
 __pycache__/
 *.pyc
+
+# Tier 1 lab runtime: per-run flags/ports and target logs, regenerated on
+# every `lab.py start` and destroyed on `stop`.
+labs/**/.lab-state
+labs/**/*.log
