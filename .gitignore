@@ -1,0 +1,10 @@
+.DS_Store
+**/.DS_Store
+material
+
+# Generated PDFs (see README.md — regenerate locally with pandoc as needed)
+*.pdf
+
+# Python cache from the sheet generator (build.py)
+__pycache__/
+*.pyc
