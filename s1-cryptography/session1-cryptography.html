@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cryptography &middot; Interactive Exercises</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: #0f1117; --surface: #181c27; --surface2: #1e2336; --border: #2a3050;
+  --accent: #a370f7; --accent-rgb: 163,112,247;
+  --text: #e8eaf0; --text-muted: #7a84a0; --text-dim: #4a5270;
+  --correct: #2ecc71; --wrong: #e74c3c;
+  --font-display: 'Fraunces', Georgia, serif; --font-body: 'Literata', Georgia, serif; --font-mono: 'DM Mono', monospace;
+  --radius: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; gap: 16px; flex-wrap: wrap; row-gap: 8px; }
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.logo { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.logo span { color: var(--accent); }
+.week-badge { font-family: var(--font-mono); font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.back-link { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-decoration: none; }
+.back-link:hover { color: var(--accent); }
+.score-pill { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 5px 16px 5px 10px; }
+.score-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-val { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--accent); min-width: 52px; text-align: right; }
+.progress-wrap { height: 3px; background: var(--border); }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff40); width: 0%; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.hero { position: relative; z-index: 1; padding: 52px 28px 24px; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.1; letter-spacing: -1px; margin-bottom: 14px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { color: var(--text-muted); font-size: 1.02rem; max-width: 620px; line-height: 1.7; }
+.hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.hero-chip { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); }
+.section-tabs { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 16px 28px 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-tab { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.5px; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
+.sub-tab:hover { border-color: var(--accent); color: var(--text); }
+.main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+.section-header { display: flex; align-items: center; gap: 14px; margin: 44px 0 20px; }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; background: rgba(var(--accent-rgb),0.15); }
+.section-header h2 { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.3px; }
+.section-header .sub-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.info-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.65; }
+.info-box strong, .info-box em { color: var(--text); }
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.3s; animation: slideIn 0.35s ease both; }
+.q-card.answered-correct { border-color: var(--correct); }
+.q-card.answered-wrong { border-color: var(--wrong); }
+.q-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+.q-num { font-family: var(--font-mono); font-size: 0.72rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+.q-text { font-size: 0.96rem; color: var(--text); flex: 1; line-height: 1.6; }
+.q-text code { font-family: var(--font-mono); background: var(--surface2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 0.86em; }
+.q-marks { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.q-body { padding: 14px 20px; }
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
+.mcq-opt { display: flex; align-items: center; gap: 12px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 7px; padding: 10px 14px; cursor: pointer; transition: all 0.18s; font-size: 0.92rem; user-select: none; }
+.mcq-opt:hover:not(.disabled) { border-color: var(--accent); }
+.mcq-opt.selected { border-color: var(--accent); background: rgba(var(--accent-rgb),0.1); }
+.mcq-opt.correct { border-color: var(--correct); background: rgba(46,204,113,0.1); }
+.mcq-opt.wrong { border-color: var(--wrong); background: rgba(231,76,60,0.08); }
+.mcq-opt.disabled { cursor: default; }
+.opt-indicator { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-family: var(--font-mono); transition: all 0.2s; }
+.mcq-opt.selected .opt-indicator { border-color: var(--accent); background: var(--accent); color: #0f1117; }
+.mcq-opt.correct .opt-indicator { border-color: var(--correct); background: var(--correct); color: #fff; }
+.mcq-opt.wrong .opt-indicator { border-color: var(--wrong); background: var(--wrong); color: #fff; }
+.num-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.num-input { width: 130px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 1.05rem; padding: 9px 12px; text-align: center; transition: border-color 0.2s; outline: none; }
+.num-input:focus { border-color: var(--accent); }
+.num-input.correct { border-color: var(--correct); }
+.num-input.wrong { border-color: var(--wrong); }
+.num-unit { font-size: 0.85rem; color: var(--text-muted); }
+.q-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.btn { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.3px; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.18s; }
+.btn-check { background: var(--accent); color: #0f1117; }
+.btn-check:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-hint { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+.btn-reveal { background: transparent; border: 1px solid var(--border); color: var(--text-dim); font-size: 0.72rem; }
+.btn-reveal:hover { color: var(--text-muted); }
+.feedback { display: none; margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; line-height: 1.6; }
+.feedback.show { display: block; }
+.feedback.correct-fb { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #7ef5b0; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #f5a0a0; }
+.feedback.hint-fb { background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.25); color: var(--accent); }
+.feedback.reveal-fb { background: rgba(122,132,160,0.1); border: 1px solid var(--border); color: var(--text-muted); }
+.section-score { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-top: 24px; }
+.section-score-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); flex: 1; }
+.section-score-val { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--accent); }
+.section-score-bar { flex: 2; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.section-score-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff80); width: 0%; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); border-radius: 3px; }
+.results-panel { display: none; background: var(--surface); border: 1px solid var(--accent); border-radius: 14px; padding: 32px; margin-top: 40px; text-align: center; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.results-panel.show { display: block; }
+.results-grade { font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+.results-label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+.results-breakdown { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.rb-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; font-family: var(--font-mono); font-size: 0.78rem; }
+.rb-chip .rb-val { font-size: 1.6rem; font-family: var(--font-display); font-weight: 600; display: block; margin-top: 4px; }
+.timer-wrap { display: flex; align-items: center; gap: 8px; }
+.timer { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+#confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+.divider { height: 1px; background: var(--border); margin: 48px 0; position: relative; }
+.divider::after { content: '\00a7'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: var(--bg); padding: 0 12px; color: var(--text-dim); font-family: var(--font-display); }
+@keyframes slideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes pulse-good { 0%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0.4)} 70%{box-shadow:0 0 0 10px rgba(var(--accent-rgb),0)} 100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0)} }
+.shake { animation: shake 0.4s ease; }
+.pulse-correct { animation: pulse-good 0.6s ease; }
+@media (max-width: 600px) {
+  .topbar { padding: 10px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .topbar-left { flex-direction: column; align-items: flex-start; gap: 3px; }
+  .topbar > div:last-child { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+  .hero, .section-tabs, .main { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">Cyber<span>Sec</span> Practice</div>
+    <div class="week-badge">Session 1 &middot; Cryptography</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="../index.html" class="back-link">&larr; All sessions</a>
+    <div class="timer-wrap"><span style="font-size:0.85rem;">&#9201;</span><div class="timer" id="timer">00:00</div></div>
+    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 24</div></div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">IJCO / SIMCC Cyber Security &middot; Session 1</div>
+  <h1>Cryptography</h1>
+  <div class="hero-sub">Cryptology, classical &amp; modern ciphers, and where crypto goes wrong in practice.</div>
+  <div class="hero-meta">
+    <div class="hero-chip">Cryptology basics</div>
+    <div class="hero-chip">Classical &amp; modern ciphers</div>
+    <div class="hero-chip">Real-world pitfalls</div>
+    <div class="hero-chip">21 questions &middot; 24 marks</div>
+  </div>
+</div>
+
+<div class="section-tabs">
+  <a href="#sec-core" class="sub-tab">Core Concepts</a>
+  <a href="#sec-classical" class="sub-tab">Classical Ciphers &amp; Attacks</a>
+  <a href="#sec-modern" class="sub-tab">Modern Ciphers &amp; Modes</a>
+  <a href="#sec-pitfalls" class="sub-tab">Pitfalls &amp; Side Channels</a>
+  <a href="#sec-history" class="sub-tab">History &amp; Real-World Failures</a>
+</div>
+
+<div class="main">
+  <div class="section-header" id="sec-core">
+    <div class="section-icon">🔑</div>
+    <div>
+      <h2>Core Concepts</h2>
+      <div class="sub-label">5 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Cryptology splits into <strong>cryptography</strong> (defending information) and <strong>cryptanalysis</strong> (attacking it). Modern schemes are designed under <strong>Kerckhoffs's principle</strong>: assume attackers know every algorithm involved &mdash; only the short secret key stays hidden.</div>
+    <div class="q-card" id="qcard-q1">
+      <div class="q-header">
+        <div class="q-num">Q1</div>
+        <div class="q-text">"Cryptology" is made up of two branches: cryptography (which defends) and ______ (which attacks).</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q1-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q1',this,'a',false)"><div class="opt-indicator"></div><div>Cryptanalysis</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q1',this,'b',false)"><div class="opt-indicator"></div><div>Steganography</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q1',this,'c',false)"><div class="opt-indicator"></div><div>Digital forensics</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q1',this,'d',false)"><div class="opt-indicator"></div><div>Obfuscation</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q1','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q1', `It's the branch focused on breaking codes, not making them.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q1', `Cryptanalysis &mdash; cryptology = cryptography (defend) + cryptanalysis (attack).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q1-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q2">
+      <div class="q-header">
+        <div class="q-num">Q2</div>
+        <div class="q-text">In the classic Alice / Bob / Eve / Mallory terminology, who represents an attacker who can only <em>eavesdrop</em>, not modify data?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q2-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q2',this,'a',false)"><div class="opt-indicator"></div><div>Alice</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q2',this,'b',false)"><div class="opt-indicator"></div><div>Bob</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q2',this,'c',false)"><div class="opt-indicator"></div><div>Eve</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q2',this,'d',false)"><div class="opt-indicator"></div><div>Mallory</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q2','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q2', `Think "Eve = eavesdropper".`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q2', `Eve can listen but not tamper with the data; Mallory is the malicious man-in-the-middle who can both eavesdrop <em>and</em> modify traffic.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q2-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q3">
+      <div class="q-header">
+        <div class="q-num">Q3</div>
+        <div class="q-text">Kerckhoffs's principle assumes attackers already know everything about a cryptosystem <em>except</em>:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q3-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q3',this,'a',false)"><div class="opt-indicator"></div><div>The ciphertext</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q3',this,'b',false)"><div class="opt-indicator"></div><div>The algorithm used</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q3',this,'c',false)"><div class="opt-indicator"></div><div>The secret key</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q3',this,'d',false)"><div class="opt-indicator"></div><div>The plaintext length</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q3','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q3', `What's the one thing that has to stay secret?`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q3', `Everything about the algorithm can be public knowledge; only the (comparatively short) secret key must remain hidden.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q3-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q4">
+      <div class="q-header">
+        <div class="q-num">Q4</div>
+        <div class="q-text">A classical substitution cipher maps 27 symbols (26 letters + a space character) to 27 symbols, giving 27! possible keys. Roughly how many <em>bits</em> are needed to represent one key (log&#8322;(27!))?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q4-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q4',this,'a',false)"><div class="opt-indicator"></div><div>About 27 bits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q4',this,'b',false)"><div class="opt-indicator"></div><div>About 94 bits</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q4',this,'c',false)"><div class="opt-indicator"></div><div>About 128 bits</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q4',this,'d',false)"><div class="opt-indicator"></div><div>About 256 bits</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q4','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q4', `It's far less than AES's 128 bits, but much more than 27.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q4', `log&#8322;(27!) &asymp; 94 bits &mdash; still nowhere near enough for a modern cipher, but too many to search by hand.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q4-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q5">
+      <div class="q-header">
+        <div class="q-num">Q5</div>
+        <div class="q-text">Why is exhaustive (brute-force) search infeasible against a 27!-key substitution cipher, per the lecture's back-of-envelope estimate?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q5-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q5',this,'a',false)"><div class="opt-indicator"></div><div>Computers cannot perform XOR operations</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q5',this,'b',false)"><div class="opt-indicator"></div><div>It would take roughly as long as the solar system has left to exist</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q5',this,'c',false)"><div class="opt-indicator"></div><div>The algorithm itself is a state secret</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q5',this,'d',false)"><div class="opt-indicator"></div><div>No computer can generate random numbers</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q5','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q5', `The lecture compares the loop count to a cosmic timescale.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q5', `At roughly 2&sup3;&#8304; loops/second, checking 27! &asymp; 2&#8313;&#8308; keys would take about 2&#8310;&sup2; seconds &mdash; comparable to the ~10&sup1;&#8313;-second (100-billion-year) estimate given for the solar system's remaining lifetime.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q5-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Core Concepts score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-core-fill"></div></div>
+    <div class="section-score-val" id="sec-core-val">0/5</div>
+  </div>
+  <div class="section-header" id="sec-classical">
+    <div class="section-icon">🔤</div>
+    <div>
+      <h2>Classical Ciphers &amp; Attacks</h2>
+      <div class="sub-label">3 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Substitution ciphers aren't secure against a determined attacker: a known plaintext reveals the key directly, and even a ciphertext-only attacker can exploit the fact that English letters (and letter pairs) occur with predictable frequency.</div>
+    <div class="q-card" id="qcard-q6">
+      <div class="q-header">
+        <div class="q-num">Q6</div>
+        <div class="q-text">Classical substitution ciphers can be broken with only a ciphertext (no known plaintext) using:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q6-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q6',this,'a',false)"><div class="opt-indicator"></div><div>Quantum computing</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q6',this,'b',false)"><div class="opt-indicator"></div><div>Frequency analysis of letters/letter-pairs</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q6',this,'c',false)"><div class="opt-indicator"></div><div>SQL injection</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q6',this,'d',false)"><div class="opt-indicator"></div><div>The birthday paradox</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q6','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q6', `Some letters (like "e") are simply more common than others in English.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q6', `Frequency analysis exploits the fact that letter (and digraph, e.g. "ll") frequencies in English are non-uniform &mdash; "e" appears far more often than "z".`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q6-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q7">
+      <div class="q-header">
+        <div class="q-num">Q7</div>
+        <div class="q-text">According to the lecture, roughly how much ciphertext is "sufficiently long" for frequency analysis to reliably break a substitution cipher in English?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q7-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q7',this,'a',false)"><div class="opt-indicator"></div><div>5 characters</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q7',this,'b',false)"><div class="opt-indicator"></div><div>50 characters</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q7',this,'c',false)"><div class="opt-indicator"></div><div>500 characters</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q7',this,'d',false)"><div class="opt-indicator"></div><div>5000 characters</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q7','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q7', `It's given as a specific rule-of-thumb number in the slides.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q7', `About 50 characters is typically enough for frequency analysis to succeed.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q7-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q8">
+      <div class="q-header">
+        <div class="q-num">Q8</div>
+        <div class="q-text">Given a known plaintext/ciphertext pair for a substitution cipher, an attacker can recover the key by:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q8-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q8',this,'a',false)"><div class="opt-indicator"></div><div>Running the AES key schedule backwards</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q8',this,'b',false)"><div class="opt-indicator"></div><div>Matching up corresponding plaintext and ciphertext letters directly</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q8',this,'c',false)"><div class="opt-indicator"></div><div>Guessing randomly until the checksum matches</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q8',this,'d',false)"><div class="opt-indicator"></div><div>Waiting for the algorithm to be leaked online</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q8','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q8', `If you already know both the input and the output, the mapping is right there.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q8', `With plaintext and ciphertext side by side, each letter pairing directly reveals an entry in the substitution table &mdash; no brute force needed.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q8-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Classical Ciphers &amp; Attacks score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-classical-fill"></div></div>
+    <div class="section-score-val" id="sec-classical-val">0/3</div>
+  </div>
+  <div class="section-header" id="sec-modern">
+    <div class="section-icon">🧊</div>
+    <div>
+      <h2>Modern Ciphers &amp; Modes</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">AES is the workhorse modern block cipher &mdash; but a block cipher only encrypts one fixed-size block. Extending that to real (large) messages needs a <strong>mode of operation</strong>, and the choice of mode matters enormously for security.</div>
+    <div class="q-card" id="qcard-q9">
+      <div class="q-header">
+        <div class="q-num">Q9</div>
+        <div class="q-text">Select all TRUE statements about AES (select all that apply):</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q9-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q9',this,'a',true)"><div class="opt-indicator">A</div><div>Block length is 128 bits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q9',this,'b',true)"><div class="opt-indicator">B</div><div>Key length can be 128, 192, or 256 bits</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q9',this,'c',true)"><div class="opt-indicator">C</div><div>Proposed to NIST in 2000 through an open, worldwide selection process</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q9',this,'d',true)"><div class="opt-indicator">D</div><div>Designed by Ron Rivest in 1987</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMulti('q9',['a','b','c'])">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q9', `One of these options actually describes RC4, not AES.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q9', `AES has a 128-bit block, a 128/192/256-bit key, and was selected by NIST in 2000 via an open process. (RC4 &mdash; not AES &mdash; was designed by Ron Rivest in 1987.)`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q9-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q10">
+      <div class="q-header">
+        <div class="q-num">Q10</div>
+        <div class="q-text">Which block-cipher mode of operation is known for leaking plaintext patterns &mdash; e.g. an encrypted image's flat background stays visible &mdash; because identical plaintext blocks always produce identical ciphertext blocks?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q10-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q10',this,'a',false)"><div class="opt-indicator"></div><div>CTR</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q10',this,'b',false)"><div class="opt-indicator"></div><div>GCM</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q10',this,'c',false)"><div class="opt-indicator"></div><div>ECB</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q10',this,'d',false)"><div class="opt-indicator"></div><div>CBC</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q10','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q10', `Think of the infamous "encrypted penguin" image example.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q10', `ECB (Electronic Code Book) encrypts every block independently with the same key, so identical plaintext blocks always produce identical ciphertext &mdash; leaking structure. Early versions of Zoom used ECB.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q10-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q11">
+      <div class="q-header">
+        <div class="q-num">Q11</div>
+        <div class="q-text">Among the AES modes mentioned in the lecture, which is described as the most secure, able to withstand attackers who can probe a "decryption oracle"?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q11-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q11',this,'a',false)"><div class="opt-indicator"></div><div>ECB</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q11',this,'b',false)"><div class="opt-indicator"></div><div>CTR</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q11',this,'c',false)"><div class="opt-indicator"></div><div>CBC</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q11',this,'d',false)"><div class="opt-indicator"></div><div>GCM</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q11','d')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q11', `It is a newer, authenticated-encryption mode.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q11', `GCM (Galois/Counter Mode) provides authenticated encryption and is the strongest of the modes listed.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q11-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q12">
+      <div class="q-header">
+        <div class="q-num">Q12</div>
+        <div class="q-text">In CTR mode, what happens if the same key <em>and</em> the same IV (nonce) are mistakenly reused to encrypt two different messages, X and Y?</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q12-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q12',this,'a',false)"><div class="opt-indicator"></div><div>The ciphertext becomes shorter</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q12',this,'b',false)"><div class="opt-indicator"></div><div>XOR-ing the two ciphertexts cancels the shared keystream, leaking X&#8853;Y</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q12',this,'c',false)"><div class="opt-indicator"></div><div>The AES algorithm simply refuses to run</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q12',this,'d',false)"><div class="opt-indicator"></div><div>Nothing &mdash; CTR mode is immune to IV reuse</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q12','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q12', `Recall the classic "two-time pad" problem: C1 &oplus; C2 = X1 &oplus; X2.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q12', `The pseudorandom keystream R is identical both times, so C1&#8853;C2 = (X&#8853;R)&#8853;(Y&#8853;R) = X&#8853;Y &mdash; a serious leak. This is the real-world flaw behind CVE-2020-1472 (ZeroLogon's static AES-CFB8 IV) and the BEAST attack on TLS.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q12-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Modern Ciphers &amp; Modes score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-modern-fill"></div></div>
+    <div class="section-score-val" id="sec-modern-val">0/6</div>
+  </div>
+  <div class="section-header" id="sec-pitfalls">
+    <div class="section-icon">⚠️</div>
+    <div>
+      <h2>Pitfalls &amp; Side Channels</h2>
+      <div class="sub-label">5 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Modern ciphers like AES are believed mathematically secure &mdash; but real systems are broken through <em>implementation</em> mistakes, not by breaking the maths.</div>
+    <div class="q-card" id="qcard-q13">
+      <div class="q-header">
+        <div class="q-num">Q13</div>
+        <div class="q-text">A key derived from an 8-character password (e.g. via SHA3), even when it feeds 128-bit AES, is realistically only as strong as:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q13-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>The full 2&sup1;&sup2;&#8312; AES keyspace</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>The much smaller password-guessing space</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q13',this,'c',false)"><div class="opt-indicator"></div><div>The SHA3 output size (256+ bits)</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q13',this,'d',false)"><div class="opt-indicator"></div><div>It cannot be attacked at all</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q13','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q13', `WikiLeaks reportedly decrypted a ciphertext exactly this way.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q13', `The effective security collapses to the size of the guessable password space, not AES's full key space &mdash; the classic "weak password" pitfall.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q13-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q14">
+      <div class="q-header">
+        <div class="q-num">Q14</div>
+        <div class="q-text">"Security through obscurity" failed for RC4 and MIFARE Classic because:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q14-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q14',this,'a',false)"><div class="opt-indicator"></div><div>Both were open-source from day one</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q14',this,'b',false)"><div class="opt-indicator"></div><div>Their secret algorithms were eventually leaked or reverse-engineered, exposing real weaknesses</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q14',this,'c',false)"><div class="opt-indicator"></div><div>Both used quantum-resistant algorithms</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q14',this,'d',false)"><div class="opt-indicator"></div><div>Neither was ever deployed in production</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q14','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q14', `RC4's algorithm leaked via an anonymous mailing-list post in 1994; MIFARE Classic was reverse-engineered in 2007.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q14', `RC4 (a trade secret since 1987) leaked in 1994; MIFARE Classic (using only 48-bit keys) was reverse-engineered in 2007. Hiding an algorithm doesn't make it secure.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q14-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q15">
+      <div class="q-header">
+        <div class="q-num">Q15</div>
+        <div class="q-text">A side-channel attack is best defined as one that:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q15-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q15',this,'a',false)"><div class="opt-indicator"></div><div>Exploits a mathematical weakness in the cipher's core algorithm</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>Uses information (often physical &mdash; power, timing, sound) outside the cipher's abstract security model</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Only works against quantum computers</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Requires directly breaking AES</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q15','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q15', `Think about measuring a smartcard's power draw while it computes.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q15', `Side-channel attacks use out-of-model information &mdash; power consumption, timing, sound, electromagnetic emissions, cache behaviour &mdash; rather than breaking the cipher's maths.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q15-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q16">
+      <div class="q-header">
+        <div class="q-num">Q16</div>
+        <div class="q-text">Which of these are side-channel attack techniques mentioned in the lecture? (select all)</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q16-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q16',this,'a',true)"><div class="opt-indicator">A</div><div>Power analysis on a smartcard</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q16',this,'b',true)"><div class="opt-indicator">B</div><div>Acoustic cryptanalysis (keystroke / 3D-printer sound)</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q16',this,'c',true)"><div class="opt-indicator">C</div><div>SQL injection</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q16',this,'d',true)"><div class="opt-indicator">D</div><div>Electromagnetic emissions from an LCD panel</div></div>
+          <div class="mcq-opt" data-val="e" onclick="selectOpt('q16',this,'e',true)"><div class="opt-indicator">E</div><div>Cache/page-fault timing on trusted hardware like Intel SGX</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMulti('q16',['a','b','d','e'])">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q16', `SQL injection is a web application attack, not a side channel.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q16', `Power analysis, acoustic cryptanalysis, EM emissions, and cache/timing attacks are all side channels; SQL injection targets a database, not a cipher implementation.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q16-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q17">
+      <div class="q-header">
+        <div class="q-num">Q17</div>
+        <div class="q-text">Which real CVE example from the lecture illustrates a "predictable key generation" pitfall?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q17-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q17',this,'a',false)"><div class="opt-indicator"></div><div>CVE-2020-7010: a Kubernetes cloud app generating passwords from deployment time</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q17',this,'b',false)"><div class="opt-indicator"></div><div>Heartbleed leaking OpenSSL memory</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q17',this,'c',false)"><div class="opt-indicator"></div><div>The BEAST attack on TLS 1.0</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q17',this,'d',false)"><div class="opt-indicator"></div><div>ZeroLogon's static AES-CFB8 IV</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q17','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q17', `It involves a time-based random number generator.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q17', `CVE-2020-7010 &mdash; a cloud app on Kubernetes generated passwords from a weak, time-based RNG, making them predictable.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q17-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Pitfalls &amp; Side Channels score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-pitfalls-fill"></div></div>
+    <div class="section-score-val" id="sec-pitfalls-val">0/6</div>
+  </div>
+  <div class="section-header" id="sec-history">
+    <div class="section-icon">📜</div>
+    <div>
+      <h2>History &amp; Real-World Failures</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Cryptography has a long track record of ciphers that looked strong when introduced, then fell to advances in cryptanalysis or plain hardware progress.</div>
+    <div class="q-card" id="qcard-q18">
+      <div class="q-header">
+        <div class="q-num">Q18</div>
+        <div class="q-text">DES, standardized in 1977 with a 56-bit key, was practically broken in 1998 by:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q18-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q18',this,'a',false)"><div class="opt-indicator"></div><div>Quantum computers</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q18',this,'b',false)"><div class="opt-indicator"></div><div>A dedicated brute-force machine cracking a key in about 56 hours</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q18',this,'c',false)"><div class="opt-indicator"></div><div>A side-channel power-analysis attack</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q18',this,'d',false)"><div class="opt-indicator"></div><div>Reverse-engineering the algorithm</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q18','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q18', `Pure brute force, once specialised hardware caught up.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q18', `In 1998 a specialised machine brute-forced a DES key in roughly 56 hours, proving 56 bits was too short for the hardware of the day.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q18-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q19">
+      <div class="q-header">
+        <div class="q-num">Q19</div>
+        <div class="q-text">RC4 became insecure in real deployments primarily because:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q19-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q19',this,'a',false)"><div class="opt-indicator"></div><div>It was mathematically broken from the very first day</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q19',this,'b',false)"><div class="opt-indicator"></div><div>WEP's use of RC4 with weak/reused IVs was exploited, and the industry moved to WPA2/AES</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q19',this,'c',false)"><div class="opt-indicator"></div><div>It required specialised hardware nobody owned</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q19',this,'d',false)"><div class="opt-indicator"></div><div>It was never actually implemented anywhere</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q19','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q19', `WEP (Wi-Fi security) is the classic real-world failure case.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q19', `WEP paired RC4 with weak IV handling. A 2001 attack (Fluhrer-Mantin-Shamir), publicly demonstrated by the FBI in 2005, broke it &mdash; pushing the industry to WPA2/AES.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q19-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q20">
+      <div class="q-header">
+        <div class="q-num">Q20</div>
+        <div class="q-text">During WWII, the Enigma machine's secret key was set physically using its:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q20-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q20',this,'a',false)"><div class="opt-indicator"></div><div>Keyboard layout alone</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>Rotors and plugboard settings</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q20',this,'c',false)"><div class="opt-indicator"></div><div>Lampboard bulbs</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>Power cable</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q20','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q20', `Two separate mechanical components each held part of the key.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q20', `The rotors and the plugboard together formed Enigma's secret key setup; the Bombe (built at Bletchley Park) helped break it.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q20-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q21">
+      <div class="q-header">
+        <div class="q-num">Q21</div>
+        <div class="q-text">Triple DES is still in limited use today with an effective key strength of about:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q21-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q21',this,'a',false)"><div class="opt-indicator"></div><div>56 bits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q21',this,'b',false)"><div class="opt-indicator"></div><div>112 bits</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q21',this,'c',false)"><div class="opt-indicator"></div><div>168 bits</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q21',this,'d',false)"><div class="opt-indicator"></div><div>256 bits</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q21','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q21', `"Triple" does not literally mean 3&times;56 bits of security.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q21', `Triple DES effectively provides about 112 bits of security (not the naive 168), due to a meet-in-the-middle attack.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q21-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">History &amp; Real-World Failures score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-history-fill"></div></div>
+    <div class="section-score-val" id="sec-history-val">0/4</div>
+  </div>
+
+  <div class="results-panel" id="results-panel">
+    <div class="results-grade" id="results-grade">&mdash;</div>
+    <div class="results-label" id="results-label">Complete all questions to see your final score</div>
+    <div class="results-breakdown" id="results-breakdown"></div>
+  </div>
+</div>
+
+<script>
+
+const state = { answers: {}, correct: {}, startTime: Date.now() };
+
+const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 1, "q8": 1, "q9": 2, "q10": 1, "q11": 1, "q12": 2, "q13": 1, "q14": 1, "q15": 1, "q16": 2, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1};
+
+const sections = {"core": {"label": "Core Concepts", "qs": ["q1", "q2", "q3", "q4", "q5"]}, "classical": {"label": "Classical Ciphers & Attacks", "qs": ["q6", "q7", "q8"]}, "modern": {"label": "Modern Ciphers & Modes", "qs": ["q9", "q10", "q11", "q12"]}, "pitfalls": {"label": "Pitfalls & Side Channels", "qs": ["q13", "q14", "q15", "q16", "q17"]}, "history": {"label": "History & Real-World Failures", "qs": ["q18", "q19", "q20", "q21"]}};
+
+const allQs = Object.values(sections).flatMap(s => s.qs);
+const maxMarks = allQs.reduce((s,q) => s + marks[q], 0);
+
+function updateTimer() {
+  const e = Math.floor((Date.now()-state.startTime)/1000);
+  document.getElementById('timer').textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+}
+setInterval(updateTimer, 1000);
+
+function selectOpt(qid, el, val, isMulti) {
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  if (!isMulti) {
+    opts.forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('.opt-indicator').textContent = '';
+    });
+    el.classList.add('selected');
+    el.querySelector('.opt-indicator').textContent = '\u2713';
+    state.answers[qid] = val;
+  } else {
+    if (!state.answers[qid]) state.answers[qid] = [];
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      el.querySelector('.opt-indicator').textContent = val.toUpperCase();
+      state.answers[qid] = state.answers[qid].filter(v => v !== val);
+    } else {
+      el.classList.add('selected');
+      el.querySelector('.opt-indicator').textContent = '\u2713';
+      state.answers[qid].push(val);
+    }
+  }
+}
+
+function checkMCQ(qid, correctVal) {
+  const selected = state.answers[qid];
+  if (!selected) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = selected === correctVal;
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (v === correctVal) opt.classList.add('correct');
+    else if (opt.classList.contains('selected') && !isCorrect) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkMulti(qid, correctVals) {
+  const selected = state.answers[qid] || [];
+  if (!selected.length) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = [...selected].sort().join('') === [...correctVals].sort().join('');
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (correctVals.includes(v)) opt.classList.add('correct');
+    else if (opt.classList.contains('selected')) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkNum(qid, correctVal, tolerance) {
+  tolerance = tolerance || 0;
+  const input = document.getElementById(`${qid}-ans`);
+  if (!input || input.value === '') { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const val = parseFloat(input.value);
+  const isCorrect = !isNaN(val) && Math.abs(val - correctVal) <= tolerance;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  markResult(qid, isCorrect);
+}
+
+function markResult(qid, isCorrect) {
+  state.correct[qid] = isCorrect;
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+  if (isCorrect) card.classList.add('pulse-correct');
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = isCorrect
+    ? `\u2705 <strong>Correct!</strong> +${marks[qid]} mark${marks[qid]>1?'s':''}`
+    : `\u274c <strong>Not quite.</strong> Check the hint or reveal the answer below.`;
+  updateScores();
+}
+
+function showHint(qid, hintText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  if (state.correct[qid] !== undefined) return;
+  fb.className = 'feedback show hint-fb';
+  fb.innerHTML = `\ud83d\udca1 <strong>Hint:</strong> ${hintText}`;
+}
+
+function revealAnswer(qid, answerText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = 'feedback show reveal-fb';
+  fb.innerHTML = `\ud83d\udcd6 <strong>Answer:</strong> ${answerText}`;
+  if (state.correct[qid] === undefined) { state.correct[qid] = false; updateScores(); }
+}
+
+function shakeCard(qid) {
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+}
+
+function updateScores() {
+  let totalScore = 0, totalAnswered = 0;
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    let secScore = 0;
+    sec.qs.forEach(qid => {
+      if (state.correct[qid] === true) { secScore += marks[qid]; totalScore += marks[qid]; }
+      if (state.correct[qid] !== undefined) totalAnswered++;
+    });
+    const fill = document.getElementById(`sec-${key}-fill`);
+    const val = document.getElementById(`sec-${key}-val`);
+    if (fill) fill.style.width = (secScore/secMax)*100 + '%';
+    if (val) val.textContent = `${secScore}/${secMax}`;
+  }
+  document.getElementById('global-score').textContent = `${totalScore} / ${maxMarks}`;
+  document.getElementById('progress-bar').style.width = `${(totalAnswered/allQs.length)*100}%`;
+  if (totalAnswered === allQs.length) showResults(totalScore);
+}
+
+function showResults(total) {
+  const pct = Math.round((total/maxMarks)*100);
+  const grade = pct>=85?'\ud83c\udfc6 Excellent!':pct>=70?'\u2b50 Great Job!':pct>=55?'\ud83d\udc4d Good Effort':'\ud83d\udcda Keep Practising';
+  const elapsed = Math.floor((Date.now()-state.startTime)/1000);
+  const mins=Math.floor(elapsed/60), secs=elapsed%60;
+  document.getElementById('results-grade').textContent = `${pct}%`;
+  document.getElementById('results-label').textContent = grade;
+  const bd = document.getElementById('results-breakdown');
+  bd.innerHTML = '';
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    const secScore = sec.qs.reduce((s,q) => s + (state.correct[q] ? marks[q] : 0), 0);
+    bd.innerHTML += `<div class="rb-chip">${sec.label}<span class="rb-val">${secScore}/${secMax}</span></div>`;
+  }
+  bd.innerHTML += `<div class="rb-chip">Time<span class="rb-val">${mins}m ${secs}s</span></div>`;
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (pct >= 70) launchConfetti();
+  try {
+    localStorage.setItem(`s1-cryptography_${Date.now()}`, JSON.stringify({ date: new Date().toISOString(), pct, total, time: `${mins}m${secs}s` }));
+  } catch(e) {}
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#a370f7','#ffffff','#4f8ef7','#3ecf8e','#f5a623'];
+  const pieces = Array.from({length:120}, (_, i) => ({
+    x:(i*53)%canvas.width, y:-((i*37)%canvas.height),
+    w:(i%7)+4, h:(i%5)+3,
+    color:colors[i%colors.length],
+    rot:(i%6), vy:(i%4)+2, vx:((i%5)-2)*0.4, vr:((i%5)-2)*0.04
+  }));
+  let frame=0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.color; ctx.globalAlpha=0.85;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.vr;
+    });
+    frame++;
+    if(frame<200) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter') {
+    const active = document.activeElement;
+    if (active && active.classList.contains('num-input')) {
+      active.closest('.q-body')?.querySelector('.btn-check')?.click();
+    }
+  }
+});
+
+</script>
+</body>
+</html>
