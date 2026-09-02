@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Networking Fundamentals &middot; Interactive Exercises</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: #0f1117; --surface: #181c27; --surface2: #1e2336; --border: #2a3050;
+  --accent: #4f8ef7; --accent-rgb: 79,142,247;
+  --text: #e8eaf0; --text-muted: #7a84a0; --text-dim: #4a5270;
+  --correct: #2ecc71; --wrong: #e74c3c;
+  --font-display: 'Fraunces', Georgia, serif; --font-body: 'Literata', Georgia, serif; --font-mono: 'DM Mono', monospace;
+  --radius: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; gap: 16px; flex-wrap: wrap; row-gap: 8px; }
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.logo { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.logo span { color: var(--accent); }
+.week-badge { font-family: var(--font-mono); font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.back-link { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-decoration: none; }
+.back-link:hover { color: var(--accent); }
+.score-pill { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 5px 16px 5px 10px; }
+.score-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-val { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--accent); min-width: 52px; text-align: right; }
+.progress-wrap { height: 3px; background: var(--border); }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff40); width: 0%; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.hero { position: relative; z-index: 1; padding: 52px 28px 24px; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.1; letter-spacing: -1px; margin-bottom: 14px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { color: var(--text-muted); font-size: 1.02rem; max-width: 620px; line-height: 1.7; }
+.hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.hero-chip { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); }
+.section-tabs { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 16px 28px 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-tab { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.5px; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
+.sub-tab:hover { border-color: var(--accent); color: var(--text); }
+.main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+.section-header { display: flex; align-items: center; gap: 14px; margin: 44px 0 20px; }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; background: rgba(var(--accent-rgb),0.15); }
+.section-header h2 { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.3px; }
+.section-header .sub-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.info-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.65; }
+.info-box strong, .info-box em { color: var(--text); }
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.3s; animation: slideIn 0.35s ease both; }
+.q-card.answered-correct { border-color: var(--correct); }
+.q-card.answered-wrong { border-color: var(--wrong); }
+.q-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+.q-num { font-family: var(--font-mono); font-size: 0.72rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+.q-text { font-size: 0.96rem; color: var(--text); flex: 1; line-height: 1.6; }
+.q-text code { font-family: var(--font-mono); background: var(--surface2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 0.86em; }
+.q-marks { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.q-body { padding: 14px 20px; }
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
+.mcq-opt { display: flex; align-items: center; gap: 12px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 7px; padding: 10px 14px; cursor: pointer; transition: all 0.18s; font-size: 0.92rem; user-select: none; }
+.mcq-opt:hover:not(.disabled) { border-color: var(--accent); }
+.mcq-opt.selected { border-color: var(--accent); background: rgba(var(--accent-rgb),0.1); }
+.mcq-opt.correct { border-color: var(--correct); background: rgba(46,204,113,0.1); }
+.mcq-opt.wrong { border-color: var(--wrong); background: rgba(231,76,60,0.08); }
+.mcq-opt.disabled { cursor: default; }
+.opt-indicator { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-family: var(--font-mono); transition: all 0.2s; }
+.mcq-opt.selected .opt-indicator { border-color: var(--accent); background: var(--accent); color: #0f1117; }
+.mcq-opt.correct .opt-indicator { border-color: var(--correct); background: var(--correct); color: #fff; }
+.mcq-opt.wrong .opt-indicator { border-color: var(--wrong); background: var(--wrong); color: #fff; }
+.num-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.num-input { width: 130px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 1.05rem; padding: 9px 12px; text-align: center; transition: border-color 0.2s; outline: none; }
+.num-input:focus { border-color: var(--accent); }
+.num-input.correct { border-color: var(--correct); }
+.num-input.wrong { border-color: var(--wrong); }
+.num-unit { font-size: 0.85rem; color: var(--text-muted); }
+.q-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.btn { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.3px; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.18s; }
+.btn-check { background: var(--accent); color: #0f1117; }
+.btn-check:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-hint { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+.btn-reveal { background: transparent; border: 1px solid var(--border); color: var(--text-dim); font-size: 0.72rem; }
+.btn-reveal:hover { color: var(--text-muted); }
+.feedback { display: none; margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; line-height: 1.6; }
+.feedback.show { display: block; }
+.feedback.correct-fb { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #7ef5b0; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #f5a0a0; }
+.feedback.hint-fb { background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.25); color: var(--accent); }
+.feedback.reveal-fb { background: rgba(122,132,160,0.1); border: 1px solid var(--border); color: var(--text-muted); }
+.section-score { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-top: 24px; }
+.section-score-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); flex: 1; }
+.section-score-val { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--accent); }
+.section-score-bar { flex: 2; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.section-score-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff80); width: 0%; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); border-radius: 3px; }
+.results-panel { display: none; background: var(--surface); border: 1px solid var(--accent); border-radius: 14px; padding: 32px; margin-top: 40px; text-align: center; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.results-panel.show { display: block; }
+.results-grade { font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+.results-label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+.results-breakdown { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.rb-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; font-family: var(--font-mono); font-size: 0.78rem; }
+.rb-chip .rb-val { font-size: 1.6rem; font-family: var(--font-display); font-weight: 600; display: block; margin-top: 4px; }
+.timer-wrap { display: flex; align-items: center; gap: 8px; }
+.timer { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+#confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+.divider { height: 1px; background: var(--border); margin: 48px 0; position: relative; }
+.divider::after { content: '\00a7'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: var(--bg); padding: 0 12px; color: var(--text-dim); font-family: var(--font-display); }
+@keyframes slideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes pulse-good { 0%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0.4)} 70%{box-shadow:0 0 0 10px rgba(var(--accent-rgb),0)} 100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0)} }
+.shake { animation: shake 0.4s ease; }
+.pulse-correct { animation: pulse-good 0.6s ease; }
+@media (max-width: 600px) {
+  .topbar { padding: 10px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .topbar-left { flex-direction: column; align-items: flex-start; gap: 3px; }
+  .topbar > div:last-child { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+  .hero, .section-tabs, .main { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">Cyber<span>Sec</span> Practice</div>
+    <div class="week-badge">Session 2 &middot; Networking</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="../index.html" class="back-link">&larr; All sessions</a>
+    <div class="timer-wrap"><span style="font-size:0.85rem;">&#9201;</span><div class="timer" id="timer">00:00</div></div>
+    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 22</div></div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">IJCO / SIMCC Cyber Security &middot; Session 2</div>
+  <h1>Networking Fundamentals</h1>
+  <div class="hero-sub">From the OSI model to TCP handshakes, IP addressing, ports, and the tools to see it all.</div>
+  <div class="hero-meta">
+    <div class="hero-chip">OSI &amp; TCP/IP</div>
+    <div class="hero-chip">IP addressing</div>
+    <div class="hero-chip">Ports &amp; scanning</div>
+    <div class="hero-chip">21 questions &middot; 22 marks</div>
+  </div>
+</div>
+
+<div class="section-tabs">
+  <a href="#sec-osi" class="sub-tab">Communication &amp; the OSI Model</a>
+  <a href="#sec-ip" class="sub-tab">IP Addressing</a>
+  <a href="#sec-transport" class="sub-tab">TCP, UDP &amp; the Handshake</a>
+  <a href="#sec-ports" class="sub-tab">Ports &amp; Scanning</a>
+  <a href="#sec-tools" class="sub-tab">Hands-On Networking Tools</a>
+</div>
+
+<div class="main">
+  <div class="section-header" id="sec-osi">
+    <div class="section-icon">🌐</div>
+    <div>
+      <h2>Communication &amp; the OSI Model</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">The <strong>OSI model</strong> (ISO 7498, 1984) splits network communication into 7 layers, from the physical wire up to the application a user sees. Real-world TCP/IP collapses several of these together, but the concepts still map across.</div>
+    <div class="q-card" id="qcard-q1">
+      <div class="q-header">
+        <div class="q-num">Q1</div>
+        <div class="q-text">The OSI (Open System Interconnect) model has how many layers?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q1-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q1',this,'a',false)"><div class="opt-indicator"></div><div>4</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q1',this,'b',false)"><div class="opt-indicator"></div><div>5</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q1',this,'c',false)"><div class="opt-indicator"></div><div>7</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q1',this,'d',false)"><div class="opt-indicator"></div><div>8</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q1','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q1', `From Application down to Physical.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q1', `7 layers: Application, Presentation, Session, Transport, Network, Datalink, Physical &mdash; published in 1984 by ISO as standard ISO 7498.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q1-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q2">
+      <div class="q-header">
+        <div class="q-num">Q2</div>
+        <div class="q-text">Which OSI layer ensures data is in a usable format and is where encryption occurs?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q2-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q2',this,'a',false)"><div class="opt-indicator"></div><div>Application</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q2',this,'b',false)"><div class="opt-indicator"></div><div>Presentation</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q2',this,'c',false)"><div class="opt-indicator"></div><div>Session</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q2',this,'d',false)"><div class="opt-indicator"></div><div>Transport</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q2','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q2', `It "presents" data properly, including encryption.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q2', `Presentation layer (layer 6) &mdash; ensures data is in a usable format, and it is where encryption happens.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q2-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q3">
+      <div class="q-header">
+        <div class="q-num">Q3</div>
+        <div class="q-text">In the simplified TCP/IP layer model used in the lecture, which layer "decides the path of the data"?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q3-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q3',this,'a',false)"><div class="opt-indicator"></div><div>Transport</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q3',this,'b',false)"><div class="opt-indicator"></div><div>Network</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q3',this,'c',false)"><div class="opt-indicator"></div><div>Datalink</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q3',this,'d',false)"><div class="opt-indicator"></div><div>Physical</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q3','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q3', `Routing decisions happen here.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q3', `The Network layer (IP) decides the path/routing of data across the internet.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q3-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q4">
+      <div class="q-header">
+        <div class="q-num">Q4</div>
+        <div class="q-text">Which protocol operates at the Application layer, used for resolving network names?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q4-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q4',this,'a',false)"><div class="opt-indicator"></div><div>TCP</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q4',this,'b',false)"><div class="opt-indicator"></div><div>ARP</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q4',this,'c',false)"><div class="opt-indicator"></div><div>DNS</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q4',this,'d',false)"><div class="opt-indicator"></div><div>Ethernet</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q4','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q4', `It translates a domain name into an IP address.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q4', `DNS (Domain Name System) is an Application-layer protocol that resolves names to addresses.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q4-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Communication &amp; the OSI Model score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-osi-fill"></div></div>
+    <div class="section-score-val" id="sec-osi-val">0/4</div>
+  </div>
+  <div class="section-header" id="sec-ip">
+    <div class="section-icon">🧭</div>
+    <div>
+      <h2>IP Addressing</h2>
+      <div class="sub-label">6 questions</div>
+    </div>
+  </div>
+  <div class="info-box">An IPv4 address splits into a <strong>network identifier</strong> and a <strong>host identifier</strong> using the subnet mask: <code>IP AND subnet mask = network identifier</code>. <strong>CIDR</strong> notation (e.g. <code>/20</code>) generalises this to any bit-length split.</div>
+    <div class="q-card" id="qcard-q5">
+      <div class="q-header">
+        <div class="q-num">Q5</div>
+        <div class="q-text">IPv4 addresses are 32 bits, giving 2&sup3;&sup2; unique addresses. Roughly how many billion is that? (nearest whole number)</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="num-row">
+          <input type="number" class="num-input" id="q5-ans" placeholder="?" step="any">
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkNum('q5',4,0)">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q5', `2&#179;&#178; = 4,294,967,296.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q5', `About 4 billion (4,294,967,296) &mdash; small enough that the world has been running out of fresh IPv4 space for years, which is part of why IPv6 exists.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q5-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q6">
+      <div class="q-header">
+        <div class="q-num">Q6</div>
+        <div class="q-text">Given IP address <code>172.16.254.1</code> and subnet mask <code>255.255.0.0</code>, what is the network identifier?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q6-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q6',this,'a',false)"><div class="opt-indicator"></div><div>172.16.0.0</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q6',this,'b',false)"><div class="opt-indicator"></div><div>172.0.0.0</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q6',this,'c',false)"><div class="opt-indicator"></div><div>172.16.254.0</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q6',this,'d',false)"><div class="opt-indicator"></div><div>0.0.254.1</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q6','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q6', `Bitwise-AND the IP with the mask, octet by octet.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q6', `172.16.254.1 AND 255.255.0.0 = 172.16.0.0 &mdash; the mask's 1-bits (first two octets) are kept, the rest zeroed.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q6-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q7">
+      <div class="q-header">
+        <div class="q-num">Q7</div>
+        <div class="q-text">Which of these are reserved <strong>private</strong> IPv4 ranges? (select all)</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q7-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q7',this,'a',true)"><div class="opt-indicator">A</div><div>10.x.x.x</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q7',this,'b',true)"><div class="opt-indicator">B</div><div>172.16.x.x &ndash; 172.31.x.x</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q7',this,'c',true)"><div class="opt-indicator">C</div><div>192.168.x.x</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q7',this,'d',true)"><div class="opt-indicator">D</div><div>8.8.8.x</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMulti('q7',['a','b','c'])">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q7', `One of these is Google's public DNS range, not private.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q7', `10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16 are private; 8.8.8.x is public (Google's DNS).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q7-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q8">
+      <div class="q-header">
+        <div class="q-num">Q8</div>
+        <div class="q-text">In CIDR notation, an address written as <code>192.4.16/20</code> means:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q8-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q8',this,'a',false)"><div class="opt-indicator"></div><div>The address has 20 host bits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q8',this,'b',false)"><div class="opt-indicator"></div><div>The leading 20 bits are the shared network number</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q8',this,'c',false)"><div class="opt-indicator"></div><div>It is an IPv6 address</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q8',this,'d',false)"><div class="opt-indicator"></div><div>The subnet mask is 255.255.255.0</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q8','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q8', `The number after the slash counts the network-identifying bits.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q8', `/20 means the leading 20 bits are shared as the network number, allowing arbitrary (classless) splits between network and host portions.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q8-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q9">
+      <div class="q-header">
+        <div class="q-num">Q9</div>
+        <div class="q-text">NAT (Network Address Translation) works by:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q9-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q9',this,'a',false)"><div class="opt-indicator"></div><div>Encrypting packets end-to-end</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q9',this,'b',false)"><div class="opt-indicator"></div><div>Rewriting IP address information in packet headers as they cross a routing device</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q9',this,'c',false)"><div class="opt-indicator"></div><div>Resolving domain names to IP addresses</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q9',this,'d',false)"><div class="opt-indicator"></div><div>Splitting large packets into fragments</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q9','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q9', `It's how many private-IP devices can share one public IP.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q9', `NAT maps one IP address space into another by modifying header info in transit, letting private addresses share a public one.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q9-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q10">
+      <div class="q-header">
+        <div class="q-num">Q10</div>
+        <div class="q-text">IPv6 uses how many bits per address, compared with IPv4's 32?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q10-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q10',this,'a',false)"><div class="opt-indicator"></div><div>64</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q10',this,'b',false)"><div class="opt-indicator"></div><div>96</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q10',this,'c',false)"><div class="opt-indicator"></div><div>128</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q10',this,'d',false)"><div class="opt-indicator"></div><div>256</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q10','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q10', `It's exactly 4&times; IPv4's address size.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q10', `IPv6 addresses are 128 bits (2&#185;&#178;&#8312; &asymp; 3.4&times;10&sup3;&#8312; addresses) &mdash; vastly more than IPv4 needs to run out of.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q10-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">IP Addressing score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-ip-fill"></div></div>
+    <div class="section-score-val" id="sec-ip-val">0/7</div>
+  </div>
+  <div class="section-header" id="sec-transport">
+    <div class="section-icon">🔌</div>
+    <div>
+      <h2>TCP, UDP &amp; the Handshake</h2>
+      <div class="sub-label">3 questions</div>
+    </div>
+  </div>
+  <div class="info-box">TCP is <strong>reliable, ordered, and connection-oriented</strong> (3-way handshake, sequence numbers, ACKs). UDP is <strong>lightweight and connectionless</strong> &mdash; no delivery guarantees, no setup overhead.</div>
+    <div class="q-card" id="qcard-q11">
+      <div class="q-header">
+        <div class="q-num">Q11</div>
+        <div class="q-text">Which transport-layer protocol offers a reliable, in-order, connection-oriented "stream of bytes" using a 3-way handshake?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q11-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q11',this,'a',false)"><div class="opt-indicator"></div><div>UDP</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q11',this,'b',false)"><div class="opt-indicator"></div><div>IP</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q11',this,'c',false)"><div class="opt-indicator"></div><div>TCP</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q11',this,'d',false)"><div class="opt-indicator"></div><div>ARP</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q11','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q11', `The one requiring SYN, SYN-ACK, ACK.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q11', `TCP &mdash; reliable, ordered, connection-oriented, using sequence numbers/acknowledgments and a 3-way handshake.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q11-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q12">
+      <div class="q-header">
+        <div class="q-num">Q12</div>
+        <div class="q-text">In the TCP 3-way handshake, what is the correct order of flags exchanged between Host A (initiator) and Host B?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q12-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q12',this,'a',false)"><div class="opt-indicator"></div><div>ACK, SYN, SYN-ACK</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q12',this,'b',false)"><div class="opt-indicator"></div><div>SYN, SYN-ACK, ACK</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q12',this,'c',false)"><div class="opt-indicator"></div><div>SYN-ACK, SYN, ACK</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q12',this,'d',false)"><div class="opt-indicator"></div><div>SYN, ACK, SYN-ACK</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q12','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q12', `Host A opens the connection first.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q12', `A sends SYN &rarr; B replies SYN-ACK &rarr; A sends ACK, completing the connection.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q12-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q13">
+      <div class="q-header">
+        <div class="q-num">Q13</div>
+        <div class="q-text">UDP is best described as:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q13-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>Reliable, ordered, connection-oriented</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>Simple, lightweight, "unreliable" message delivery with no handshake</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q13',this,'c',false)"><div class="opt-indicator"></div><div>Used exclusively for HTTP traffic</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q13',this,'d',false)"><div class="opt-indicator"></div><div>A routing protocol</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q13','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q13', `No 3-way handshake, no guaranteed delivery.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q13', `UDP is a lightweight, stateless datagram protocol with no reliability, ordering, or connection setup &mdash; trading guarantees for speed.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q13-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">TCP, UDP &amp; the Handshake score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-transport-fill"></div></div>
+    <div class="section-score-val" id="sec-transport-val">0/3</div>
+  </div>
+  <div class="section-header" id="sec-ports">
+    <div class="section-icon">🔎</div>
+    <div>
+      <h2>Ports &amp; Scanning</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Port numbers split into three ranges by convention, and scanning them can reveal what services a host is running &mdash; useful for defenders and attackers alike. <strong>Scanning without permission is illegal.</strong></div>
+    <div class="q-card" id="qcard-q14">
+      <div class="q-header">
+        <div class="q-num">Q14</div>
+        <div class="q-text">Which port range is reserved as "Well Known Ports" for standard services like HTTP and SMTP?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q14-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q14',this,'a',false)"><div class="opt-indicator"></div><div>0&ndash;1023</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q14',this,'b',false)"><div class="opt-indicator"></div><div>1024&ndash;49151</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q14',this,'c',false)"><div class="opt-indicator"></div><div>49152&ndash;65535</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q14',this,'d',false)"><div class="opt-indicator"></div><div>1&ndash;65535</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q14','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q14', `Web servers (port 80/443) fall in this range.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q14', `Well Known Ports are 0&ndash;1023.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q14-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q15">
+      <div class="q-header">
+        <div class="q-num">Q15</div>
+        <div class="q-text">Ports 49152&ndash;65535 are known as:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q15-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q15',this,'a',false)"><div class="opt-indicator"></div><div>Well Known Ports</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>Registered Ports</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Dynamic / Private (Ephemeral) Ports</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Reserved Ports</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q15','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q15', `Assigned on-the-fly to outgoing client connections.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q15', `Dynamic or Private (Ephemeral) Ports &mdash; usually assigned automatically to client-initiated connections.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q15-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q16">
+      <div class="q-header">
+        <div class="q-num">Q16</div>
+        <div class="q-text">A "SYN scan" (half-open / stealth scan) differs from a full TCP Connect scan because:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q16-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q16',this,'a',false)"><div class="opt-indicator"></div><div>It never sends any packets at all</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q16',this,'b',false)"><div class="opt-indicator"></div><div>After receiving SYN-ACK, it sends a RESET instead of completing the handshake</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q16',this,'c',false)"><div class="opt-indicator"></div><div>It only works over UDP</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q16',this,'d',false)"><div class="opt-indicator"></div><div>It encrypts all scan traffic</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q16','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q16', `It is called "half-open" for a reason.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q16', `SYN scan sends a RST after receiving SYN-ACK rather than completing the handshake &mdash; faster and stealthier than a full TCP Connect scan.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q16-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q17">
+      <div class="q-header">
+        <div class="q-num">Q17</div>
+        <div class="q-text">Why are UDP port scans described as slower and less reliable than TCP scans?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q17-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q17',this,'a',false)"><div class="opt-indicator"></div><div>UDP packets are physically larger</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q17',this,'b',false)"><div class="opt-indicator"></div><div>There is no acknowledgment confirming a packet was received (UDP is "stateless")</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q17',this,'c',false)"><div class="opt-indicator"></div><div>UDP is always blocked by every firewall</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q17',this,'d',false)"><div class="opt-indicator"></div><div>UDP requires its own 3-way handshake</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q17','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q17', `No built-in "did you get it?" signal.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q17', `UDP has no handshake or ACK, so a scanner can't easily tell "open" from "filtered" &mdash; making UDP scans slower and less certain.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q17-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Ports &amp; Scanning score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-ports-fill"></div></div>
+    <div class="section-score-val" id="sec-ports-val">0/4</div>
+  </div>
+  <div class="section-header" id="sec-tools">
+    <div class="section-icon">🛠️</div>
+    <div>
+      <h2>Hands-On Networking Tools</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">A handful of command-line tools cover most day-to-day network diagnosis and reconnaissance.</div>
+    <div class="q-card" id="qcard-q18">
+      <div class="q-header">
+        <div class="q-num">Q18</div>
+        <div class="q-text">Which command-line tool tests whether a host is reachable across an IP network and reports the reply time?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q18-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q18',this,'a',false)"><div class="opt-indicator"></div><div>netstat</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q18',this,'b',false)"><div class="opt-indicator"></div><div>ping</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q18',this,'c',false)"><div class="opt-indicator"></div><div>ifconfig</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q18',this,'d',false)"><div class="opt-indicator"></div><div>hostname</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q18','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q18', `The classic "are you there?" tool.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q18', `ping &mdash; tests reachability and measures round-trip reply time.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q18-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q19">
+      <div class="q-header">
+        <div class="q-num">Q19</div>
+        <div class="q-text">Which tool reports each router "hop" and the elapsed time along the path to a destination?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q19-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q19',this,'a',false)"><div class="opt-indicator"></div><div>traceroute</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q19',this,'b',false)"><div class="opt-indicator"></div><div>netstat</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q19',this,'c',false)"><div class="opt-indicator"></div><div>grep</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q19',this,'d',false)"><div class="opt-indicator"></div><div>nmap</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q19','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q19', `It maps the route packets take.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q19', `traceroute.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q19-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q20">
+      <div class="q-header">
+        <div class="q-num">Q20</div>
+        <div class="q-text">Which tool shows a host's current routing-table entries, active connections, and listening ports?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q20-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q20',this,'a',false)"><div class="opt-indicator"></div><div>ping</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>netstat</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q20',this,'c',false)"><div class="opt-indicator"></div><div>traceroute</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>hostname</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q20','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q20', `Think "network statistics".`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q20', `netstat.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q20-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q21">
+      <div class="q-header">
+        <div class="q-num">Q21</div>
+        <div class="q-text">Which of these is a <em>network scanning</em> tool for discovering live hosts, open ports, and running services &mdash; not a packet sniffer?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q21-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q21',this,'a',false)"><div class="opt-indicator"></div><div>Wireshark</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q21',this,'b',false)"><div class="opt-indicator"></div><div>Ettercap</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q21',this,'c',false)"><div class="opt-indicator"></div><div>Nmap</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q21',this,'d',false)"><div class="opt-indicator"></div><div>tcpdump</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q21','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q21', `The industry-standard port scanner named in the slides.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q21', `Nmap scans for live hosts, open ports and services; Wireshark and Ettercap are packet <em>sniffers</em>, used to capture and inspect traffic instead.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q21-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Hands-On Networking Tools score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-tools-fill"></div></div>
+    <div class="section-score-val" id="sec-tools-val">0/4</div>
+  </div>
+
+  <div class="results-panel" id="results-panel">
+    <div class="results-grade" id="results-grade">&mdash;</div>
+    <div class="results-label" id="results-label">Complete all questions to see your final score</div>
+    <div class="results-breakdown" id="results-breakdown"></div>
+  </div>
+</div>
+
+<script>
+
+const state = { answers: {}, correct: {}, startTime: Date.now() };
+
+const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 2, "q8": 1, "q9": 1, "q10": 1, "q11": 1, "q12": 1, "q13": 1, "q14": 1, "q15": 1, "q16": 1, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1};
+
+const sections = {"osi": {"label": "Communication & the OSI Model", "qs": ["q1", "q2", "q3", "q4"]}, "ip": {"label": "IP Addressing", "qs": ["q5", "q6", "q7", "q8", "q9", "q10"]}, "transport": {"label": "TCP, UDP & the Handshake", "qs": ["q11", "q12", "q13"]}, "ports": {"label": "Ports & Scanning", "qs": ["q14", "q15", "q16", "q17"]}, "tools": {"label": "Hands-On Networking Tools", "qs": ["q18", "q19", "q20", "q21"]}};
+
+const allQs = Object.values(sections).flatMap(s => s.qs);
+const maxMarks = allQs.reduce((s,q) => s + marks[q], 0);
+
+function updateTimer() {
+  const e = Math.floor((Date.now()-state.startTime)/1000);
+  document.getElementById('timer').textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+}
+setInterval(updateTimer, 1000);
+
+function selectOpt(qid, el, val, isMulti) {
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  if (!isMulti) {
+    opts.forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('.opt-indicator').textContent = '';
+    });
+    el.classList.add('selected');
+    el.querySelector('.opt-indicator').textContent = '\u2713';
+    state.answers[qid] = val;
+  } else {
+    if (!state.answers[qid]) state.answers[qid] = [];
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      el.querySelector('.opt-indicator').textContent = val.toUpperCase();
+      state.answers[qid] = state.answers[qid].filter(v => v !== val);
+    } else {
+      el.classList.add('selected');
+      el.querySelector('.opt-indicator').textContent = '\u2713';
+      state.answers[qid].push(val);
+    }
+  }
+}
+
+function checkMCQ(qid, correctVal) {
+  const selected = state.answers[qid];
+  if (!selected) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = selected === correctVal;
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (v === correctVal) opt.classList.add('correct');
+    else if (opt.classList.contains('selected') && !isCorrect) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkMulti(qid, correctVals) {
+  const selected = state.answers[qid] || [];
+  if (!selected.length) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = [...selected].sort().join('') === [...correctVals].sort().join('');
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (correctVals.includes(v)) opt.classList.add('correct');
+    else if (opt.classList.contains('selected')) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkNum(qid, correctVal, tolerance) {
+  tolerance = tolerance || 0;
+  const input = document.getElementById(`${qid}-ans`);
+  if (!input || input.value === '') { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const val = parseFloat(input.value);
+  const isCorrect = !isNaN(val) && Math.abs(val - correctVal) <= tolerance;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  markResult(qid, isCorrect);
+}
+
+function markResult(qid, isCorrect) {
+  state.correct[qid] = isCorrect;
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+  if (isCorrect) card.classList.add('pulse-correct');
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = isCorrect
+    ? `\u2705 <strong>Correct!</strong> +${marks[qid]} mark${marks[qid]>1?'s':''}`
+    : `\u274c <strong>Not quite.</strong> Check the hint or reveal the answer below.`;
+  updateScores();
+}
+
+function showHint(qid, hintText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  if (state.correct[qid] !== undefined) return;
+  fb.className = 'feedback show hint-fb';
+  fb.innerHTML = `\ud83d\udca1 <strong>Hint:</strong> ${hintText}`;
+}
+
+function revealAnswer(qid, answerText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = 'feedback show reveal-fb';
+  fb.innerHTML = `\ud83d\udcd6 <strong>Answer:</strong> ${answerText}`;
+  if (state.correct[qid] === undefined) { state.correct[qid] = false; updateScores(); }
+}
+
+function shakeCard(qid) {
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+}
+
+function updateScores() {
+  let totalScore = 0, totalAnswered = 0;
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    let secScore = 0;
+    sec.qs.forEach(qid => {
+      if (state.correct[qid] === true) { secScore += marks[qid]; totalScore += marks[qid]; }
+      if (state.correct[qid] !== undefined) totalAnswered++;
+    });
+    const fill = document.getElementById(`sec-${key}-fill`);
+    const val = document.getElementById(`sec-${key}-val`);
+    if (fill) fill.style.width = (secScore/secMax)*100 + '%';
+    if (val) val.textContent = `${secScore}/${secMax}`;
+  }
+  document.getElementById('global-score').textContent = `${totalScore} / ${maxMarks}`;
+  document.getElementById('progress-bar').style.width = `${(totalAnswered/allQs.length)*100}%`;
+  if (totalAnswered === allQs.length) showResults(totalScore);
+}
+
+function showResults(total) {
+  const pct = Math.round((total/maxMarks)*100);
+  const grade = pct>=85?'\ud83c\udfc6 Excellent!':pct>=70?'\u2b50 Great Job!':pct>=55?'\ud83d\udc4d Good Effort':'\ud83d\udcda Keep Practising';
+  const elapsed = Math.floor((Date.now()-state.startTime)/1000);
+  const mins=Math.floor(elapsed/60), secs=elapsed%60;
+  document.getElementById('results-grade').textContent = `${pct}%`;
+  document.getElementById('results-label').textContent = grade;
+  const bd = document.getElementById('results-breakdown');
+  bd.innerHTML = '';
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    const secScore = sec.qs.reduce((s,q) => s + (state.correct[q] ? marks[q] : 0), 0);
+    bd.innerHTML += `<div class="rb-chip">${sec.label}<span class="rb-val">${secScore}/${secMax}</span></div>`;
+  }
+  bd.innerHTML += `<div class="rb-chip">Time<span class="rb-val">${mins}m ${secs}s</span></div>`;
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (pct >= 70) launchConfetti();
+  try {
+    localStorage.setItem(`s2-networking_${Date.now()}`, JSON.stringify({ date: new Date().toISOString(), pct, total, time: `${mins}m${secs}s` }));
+  } catch(e) {}
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#4f8ef7','#ffffff','#4f8ef7','#3ecf8e','#f5a623'];
+  const pieces = Array.from({length:120}, (_, i) => ({
+    x:(i*53)%canvas.width, y:-((i*37)%canvas.height),
+    w:(i%7)+4, h:(i%5)+3,
+    color:colors[i%colors.length],
+    rot:(i%6), vy:(i%4)+2, vx:((i%5)-2)*0.4, vr:((i%5)-2)*0.04
+  }));
+  let frame=0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.color; ctx.globalAlpha=0.85;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.vr;
+    });
+    frame++;
+    if(frame<200) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter') {
+    const active = document.activeElement;
+    if (active && active.classList.contains('num-input')) {
+      active.closest('.q-body')?.querySelector('.btn-check')?.click();
+    }
+  }
+});
+
+</script>
+</body>
+</html>
