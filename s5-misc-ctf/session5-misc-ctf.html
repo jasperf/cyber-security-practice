@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miscellaneous CTF Challenges &middot; Interactive Exercises</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: #0f1117; --surface: #181c27; --surface2: #1e2336; --border: #2a3050;
+  --accent: #3ecf8e; --accent-rgb: 62,207,142;
+  --text: #e8eaf0; --text-muted: #7a84a0; --text-dim: #4a5270;
+  --correct: #2ecc71; --wrong: #e74c3c;
+  --font-display: 'Fraunces', Georgia, serif; --font-body: 'Literata', Georgia, serif; --font-mono: 'DM Mono', monospace;
+  --radius: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; gap: 16px; flex-wrap: wrap; row-gap: 8px; }
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.logo { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.logo span { color: var(--accent); }
+.week-badge { font-family: var(--font-mono); font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.back-link { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-decoration: none; }
+.back-link:hover { color: var(--accent); }
+.score-pill { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 5px 16px 5px 10px; }
+.score-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-val { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--accent); min-width: 52px; text-align: right; }
+.progress-wrap { height: 3px; background: var(--border); }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff40); width: 0%; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.hero { position: relative; z-index: 1; padding: 52px 28px 24px; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.1; letter-spacing: -1px; margin-bottom: 14px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { color: var(--text-muted); font-size: 1.02rem; max-width: 620px; line-height: 1.7; }
+.hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.hero-chip { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); }
+.section-tabs { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 16px 28px 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-tab { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.5px; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
+.sub-tab:hover { border-color: var(--accent); color: var(--text); }
+.main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+.section-header { display: flex; align-items: center; gap: 14px; margin: 44px 0 20px; }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; background: rgba(var(--accent-rgb),0.15); }
+.section-header h2 { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.3px; }
+.section-header .sub-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.info-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.65; }
+.info-box strong, .info-box em { color: var(--text); }
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.3s; animation: slideIn 0.35s ease both; }
+.q-card.answered-correct { border-color: var(--correct); }
+.q-card.answered-wrong { border-color: var(--wrong); }
+.q-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+.q-num { font-family: var(--font-mono); font-size: 0.72rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+.q-text { font-size: 0.96rem; color: var(--text); flex: 1; line-height: 1.6; }
+.q-text code { font-family: var(--font-mono); background: var(--surface2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 0.86em; }
+.q-marks { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.q-body { padding: 14px 20px; }
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
+.mcq-opt { display: flex; align-items: center; gap: 12px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 7px; padding: 10px 14px; cursor: pointer; transition: all 0.18s; font-size: 0.92rem; user-select: none; }
+.mcq-opt:hover:not(.disabled) { border-color: var(--accent); }
+.mcq-opt.selected { border-color: var(--accent); background: rgba(var(--accent-rgb),0.1); }
+.mcq-opt.correct { border-color: var(--correct); background: rgba(46,204,113,0.1); }
+.mcq-opt.wrong { border-color: var(--wrong); background: rgba(231,76,60,0.08); }
+.mcq-opt.disabled { cursor: default; }
+.opt-indicator { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; font-family: var(--font-mono); transition: all 0.2s; }
+.mcq-opt.selected .opt-indicator { border-color: var(--accent); background: var(--accent); color: #0f1117; }
+.mcq-opt.correct .opt-indicator { border-color: var(--correct); background: var(--correct); color: #fff; }
+.mcq-opt.wrong .opt-indicator { border-color: var(--wrong); background: var(--wrong); color: #fff; }
+.num-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.num-input { width: 130px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 1.05rem; padding: 9px 12px; text-align: center; transition: border-color 0.2s; outline: none; }
+.num-input:focus { border-color: var(--accent); }
+.num-input.correct { border-color: var(--correct); }
+.num-input.wrong { border-color: var(--wrong); }
+.num-unit { font-size: 0.85rem; color: var(--text-muted); }
+.q-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.btn { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.3px; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.18s; }
+.btn-check { background: var(--accent); color: #0f1117; }
+.btn-check:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-hint { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.btn-hint:hover { border-color: var(--accent); color: var(--accent); }
+.btn-reveal { background: transparent; border: 1px solid var(--border); color: var(--text-dim); font-size: 0.72rem; }
+.btn-reveal:hover { color: var(--text-muted); }
+.feedback { display: none; margin-top: 12px; padding: 10px 14px; border-radius: 6px; font-size: 0.88rem; line-height: 1.6; }
+.feedback.show { display: block; }
+.feedback.correct-fb { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #7ef5b0; }
+.feedback.wrong-fb { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #f5a0a0; }
+.feedback.hint-fb { background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.25); color: var(--accent); }
+.feedback.reveal-fb { background: rgba(122,132,160,0.1); border: 1px solid var(--border); color: var(--text-muted); }
+.section-score { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-top: 24px; }
+.section-score-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); flex: 1; }
+.section-score-val { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; color: var(--accent); }
+.section-score-bar { flex: 2; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.section-score-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff80); width: 0%; transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1); border-radius: 3px; }
+.results-panel { display: none; background: var(--surface); border: 1px solid var(--accent); border-radius: 14px; padding: 32px; margin-top: 40px; text-align: center; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.results-panel.show { display: block; }
+.results-grade { font-family: var(--font-display); font-size: 4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+.results-label { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; }
+.results-breakdown { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.rb-chip { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; font-family: var(--font-mono); font-size: 0.78rem; }
+.rb-chip .rb-val { font-size: 1.6rem; font-family: var(--font-display); font-weight: 600; display: block; margin-top: 4px; }
+.timer-wrap { display: flex; align-items: center; gap: 8px; }
+.timer { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+#confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+.divider { height: 1px; background: var(--border); margin: 48px 0; position: relative; }
+.divider::after { content: '\00a7'; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: var(--bg); padding: 0 12px; color: var(--text-dim); font-family: var(--font-display); }
+@keyframes slideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+@keyframes pulse-good { 0%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0.4)} 70%{box-shadow:0 0 0 10px rgba(var(--accent-rgb),0)} 100%{box-shadow:0 0 0 0 rgba(var(--accent-rgb),0)} }
+.shake { animation: shake 0.4s ease; }
+.pulse-correct { animation: pulse-good 0.6s ease; }
+@media (max-width: 600px) {
+  .topbar { padding: 10px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .topbar-left { flex-direction: column; align-items: flex-start; gap: 3px; }
+  .topbar > div:last-child { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+  .hero, .section-tabs, .main { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">Cyber<span>Sec</span> Practice</div>
+    <div class="week-badge">Session 5 &middot; Misc CTF</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="../index.html" class="back-link">&larr; All sessions</a>
+    <div class="timer-wrap"><span style="font-size:0.85rem;">&#9201;</span><div class="timer" id="timer">00:00</div></div>
+    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 21</div></div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">IJCO / SIMCC Cyber Security &middot; Session 5</div>
+  <h1>Miscellaneous CTF Challenges</h1>
+  <div class="hero-sub">Challenge categories, social engineering, OSINT, and the mindset behind the trickiest flags.</div>
+  <div class="hero-meta">
+    <div class="hero-chip">Challenge categories</div>
+    <div class="hero-chip">Social engineering &amp; OSINT</div>
+    <div class="hero-chip">CTF mindset</div>
+    <div class="hero-chip">20 questions &middot; 21 marks</div>
+  </div>
+</div>
+
+<div class="section-tabs">
+  <a href="#sec-categories" class="sub-tab">Challenge Categories</a>
+  <a href="#sec-social" class="sub-tab">Social Engineering &amp; OSINT</a>
+  <a href="#sec-hardware" class="sub-tab">Hardware &amp; Real-World Cases</a>
+  <a href="#sec-mindset" class="sub-tab">Mindset &amp; Tips</a>
+</div>
+
+<div class="main">
+  <div class="section-header" id="sec-categories">
+    <div class="section-icon">🧩</div>
+    <div>
+      <h2>Challenge Categories</h2>
+      <div class="sub-label">3 questions</div>
+    </div>
+  </div>
+  <div class="info-box">CTF challenges cluster into a handful of recognisable categories &mdash; web, cryptography, reverse engineering, vulnerability exploitation, and flag retrieval &mdash; each demanding a different toolkit.</div>
+    <div class="q-card" id="qcard-q1">
+      <div class="q-header">
+        <div class="q-num">Q1</div>
+        <div class="q-text">A "web application challenge" in CTF terms typically requires participants to:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q1-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q1',this,'a',false)"><div class="opt-indicator"></div><div>Analyse malware behaviour</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q1',this,'b',false)"><div class="opt-indicator"></div><div>Find and exploit vulnerabilities to gain access to sensitive data or elevate privileges</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q1',this,'c',false)"><div class="opt-indicator"></div><div>Crack a password or decode an encrypted message</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q1',this,'d',false)"><div class="opt-indicator"></div><div>Carefully observe an image to find a hidden flag</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q1','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q1', `Think SQLi, XSS, broken auth &mdash; classic web bugs.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q1', `Web application challenges are about finding and exploiting vulnerabilities to access data or escalate privileges.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q1-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q2">
+      <div class="q-header">
+        <div class="q-num">Q2</div>
+        <div class="q-text">A "reverse engineering challenge" requires participants to:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q2-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q2',this,'a',false)"><div class="opt-indicator"></div><div>Exploit a live web vulnerability</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q2',this,'b',false)"><div class="opt-indicator"></div><div>Analyse a malware/binary sample to understand its behaviour and identify vulnerabilities</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q2',this,'c',false)"><div class="opt-indicator"></div><div>Decode a Base64 string</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q2',this,'d',false)"><div class="opt-indicator"></div><div>Trespass into an office building</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q2','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q2', `Think decompiling a program, not attacking a website.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q2', `Reverse engineering challenges involve pulling apart a binary/malware sample to understand what it does.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q2-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q3">
+      <div class="q-header">
+        <div class="q-num">Q3</div>
+        <div class="q-text">In CTF "flag retrieval" challenges, participants typically:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q3-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q3',this,'a',false)"><div class="opt-indicator"></div><div>Crack a password hash</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q3',this,'b',false)"><div class="opt-indicator"></div><div>Carefully observe an image, file, or piece of text to find a hidden flag</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q3',this,'c',false)"><div class="opt-indicator"></div><div>Write exploit code for a buffer overflow</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q3',this,'d',false)"><div class="opt-indicator"></div><div>Reverse-engineer a compiled binary</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q3','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q3', `It's about close observation, not exploitation.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q3', `Flag retrieval challenges reward careful observation of an image, file, or text to spot a hidden flag.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q3-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Challenge Categories score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-categories-fill"></div></div>
+    <div class="section-score-val" id="sec-categories-val">0/3</div>
+  </div>
+  <div class="section-header" id="sec-social">
+    <div class="section-icon">🎭</div>
+    <div>
+      <h2>Social Engineering &amp; OSINT</h2>
+      <div class="sub-label">7 questions</div>
+    </div>
+  </div>
+  <div class="info-box"><strong>Social engineering</strong> manipulates people, not machines. <strong>OSINT</strong> (Open-Source Intelligence) gathers information from public sources &mdash; and both show up regularly as CTF challenge categories.</div>
+    <div class="q-card" id="qcard-q4">
+      <div class="q-header">
+        <div class="q-num">Q4</div>
+        <div class="q-text">Social engineering, as defined in the lecture, is:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q4-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q4',this,'a',false)"><div class="opt-indicator"></div><div>Writing secure application code</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q4',this,'b',false)"><div class="opt-indicator"></div><div>The psychological manipulation of unsuspecting victims into divulging confidential information</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q4',this,'c',false)"><div class="opt-indicator"></div><div>A type of firewall configuration</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q4',this,'d',false)"><div class="opt-indicator"></div><div>A network scanning technique</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q4','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q4', `It targets people, not systems.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q4', `Social engineering is the psychological manipulation of victims into revealing confidential information.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q4-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q5">
+      <div class="q-header">
+        <div class="q-num">Q5</div>
+        <div class="q-text">Which of these are named as ways social engineering can operate? (select all)</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q5-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q5',this,'a',true)"><div class="opt-indicator">A</div><div>Trickery or flattery, playing on fears/desires</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q5',this,'b',true)"><div class="opt-indicator">B</div><div>Exerting force to make a victim feel compelled to share information</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q5',this,'c',true)"><div class="opt-indicator">C</div><div>Automatically patching software vulnerabilities</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q5',this,'d',true)"><div class="opt-indicator">D</div><div>Gaining unrestricted access to a victim's devices to steal information</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMulti('q5',['a','b','d'])">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q5', `One option describes defensive IT hygiene, not an attack technique.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q5', `Trickery/flattery, exerting force, and gaining device access are all named social-engineering approaches; "automatically patching vulnerabilities" is unrelated (it's a defensive measure).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q5-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q6">
+      <div class="q-header">
+        <div class="q-num">Q6</div>
+        <div class="q-text">OSINT stands for:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q6-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q6',this,'a',false)"><div class="opt-indicator"></div><div>Open-Source Intelligence</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q6',this,'b',false)"><div class="opt-indicator"></div><div>Online Security Intelligence Network Toolkit</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q6',this,'c',false)"><div class="opt-indicator"></div><div>Operational System Integrity</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q6',this,'d',false)"><div class="opt-indicator"></div><div>Offensive Security Internal Testing</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q6','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q6', `It's about gathering info from publicly available sources.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q6', `Open-Source Intelligence.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q6-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q7">
+      <div class="q-header">
+        <div class="q-num">Q7</div>
+        <div class="q-text">Who, according to the slides, can practise OSINT?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q7-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q7',this,'a',false)"><div class="opt-indicator"></div><div>Only state intelligence agencies</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q7',this,'b',false)"><div class="opt-indicator"></div><div>IT security experts, state-sanctioned operatives, malicious hackers, and students/novices alike</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q7',this,'c',false)"><div class="opt-indicator"></div><div>Only malicious hackers</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q7',this,'d',false)"><div class="opt-indicator"></div><div>Only law enforcement</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q7','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q7', `It's described as accessible to a wide range of people.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q7', `OSINT's appeal is that it's practised by IT security experts, intelligence operatives, malicious hackers, and novice learners alike.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q7-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q8">
+      <div class="q-header">
+        <div class="q-num">Q8</div>
+        <div class="q-text">Which of these is listed as an OSINT tool in the lecture?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q8-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q8',this,'a',false)"><div class="opt-indicator"></div><div>Metasploit</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q8',this,'b',false)"><div class="opt-indicator"></div><div>DNS Dumpster</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q8',this,'c',false)"><div class="opt-indicator"></div><div>fcrackzip</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q8',this,'d',false)"><div class="opt-indicator"></div><div>Ghidra</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q8','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q8', `It helps map out a domain's DNS footprint.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q8', `DNS Dumpster (alongside OSINT.sh, TheHarvester, Recon-ng, and the Internet Archive).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q8-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q9">
+      <div class="q-header">
+        <div class="q-num">Q9</div>
+        <div class="q-text">Which OSINT resource lets you view historical/archived snapshots of a website (useful for finding "the first version" of a site)?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q9-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q9',this,'a',false)"><div class="opt-indicator"></div><div>TheHarvester</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q9',this,'b',false)"><div class="opt-indicator"></div><div>Recon-ng</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q9',this,'c',false)"><div class="opt-indicator"></div><div>Internet Archive (Wayback Machine)</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q9',this,'d',false)"><div class="opt-indicator"></div><div>DNS Dumpster</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q9','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q9', `It's a giant library of old web page snapshots.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q9', `Internet Archive / Wayback Machine.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q9-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q10">
+      <div class="q-header">
+        <div class="q-num">Q10</div>
+        <div class="q-text">Why are keystrokes and mouse movements a security concern, per the lecture?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q10-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q10',this,'a',false)"><div class="opt-indicator"></div><div>They slow down the computer</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q10',this,'b',false)"><div class="opt-indicator"></div><div>A vigilant attacker who monitors them can exfiltrate sensitive data like passwords and screen patterns</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q10',this,'c',false)"><div class="opt-indicator"></div><div>They are always encrypted, so pose no risk</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q10',this,'d',false)"><div class="opt-indicator"></div><div>They cannot be logged by any software</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q10','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q10', `Think keyloggers and mouse-pattern tracking.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q10', `Monitoring keystrokes/mouse movement can leak passwords, screen unlock patterns, frequently visited apps, and more.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q10-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Social Engineering &amp; OSINT score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-social-fill"></div></div>
+    <div class="section-score-val" id="sec-social-val">0/8</div>
+  </div>
+  <div class="section-header" id="sec-hardware">
+    <div class="section-icon">🔩</div>
+    <div>
+      <h2>Hardware &amp; Real-World Cases</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Not every CTF challenge is purely digital &mdash; some involve physical hardware, and real-world incidents show how far these attacks can reach.</div>
+    <div class="q-card" id="qcard-q11">
+      <div class="q-header">
+        <div class="q-num">Q11</div>
+        <div class="q-text">The Olympic CTF 2014 "shredded paper" challenge is used as an example that some CTF puzzles require:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q11-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q11',this,'a',false)"><div class="opt-indicator"></div><div>Advanced quantum computing</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q11',this,'b',false)"><div class="opt-indicator"></div><div>No computer knowledge at all &mdash; just patience and a keen eye</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q11',this,'c',false)"><div class="opt-indicator"></div><div>A specialised reverse-engineering toolchain</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q11',this,'d',false)"><div class="opt-indicator"></div><div>Knowledge of assembly language</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q11','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q11', `It was solved entirely by hand.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q11', `It was solved by hand, with patience and a good eye, requiring no computer knowledge at all.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q11-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q12">
+      <div class="q-header">
+        <div class="q-num">Q12</div>
+        <div class="q-text">Hardware-based CTF challenges may involve:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q12-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q12',this,'a',false)"><div class="opt-indicator"></div><div>Only web browser exploits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q12',this,'b',false)"><div class="opt-indicator"></div><div>Participants examining a thumb-drive/hard-disk, or attacking/defending a physical testbed</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q12',this,'c',false)"><div class="opt-indicator"></div><div>Purely theoretical questions with no physical component</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q12',this,'d',false)"><div class="opt-indicator"></div><div>Social media analysis only</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q12','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q12', `Think of a literal piece of hardware handed to a participant.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q12', `Participants may be handed physical media to examine, or asked to attack/defend a physical testbed in Red/Blue exercises.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q12-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q13">
+      <div class="q-header">
+        <div class="q-num">Q13</div>
+        <div class="q-text">The "Industroyer" attack by the Sandworm group targeted:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q13-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>A hospital's patient records</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>A state-run power station in Ukraine, causing power failure in part of Kyiv</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q13',this,'c',false)"><div class="opt-indicator"></div><div>A cryptocurrency exchange</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q13',this,'d',false)"><div class="opt-indicator"></div><div>A university's exam database</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q13','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q13', `December 2016, affecting roughly a fifth of the capital's power.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q13', `Industroyer caused a power outage affecting about one-fifth of Kyiv in December 2016; a second attempt (Industroyer 2) in April 2022 was stopped by Ukrainian officials.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q13-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q14">
+      <div class="q-header">
+        <div class="q-num">Q14</div>
+        <div class="q-text">MITRE, known for the ATT&amp;CK framework, is also mentioned as leading efforts in which growing CTF area?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q14-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q14',this,'a',false)"><div class="opt-indicator"></div><div>Social engineering CTFs</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q14',this,'b',false)"><div class="opt-indicator"></div><div>Hardware-based / embedded CTF (eCTF) challenges</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q14',this,'c',false)"><div class="opt-indicator"></div><div>Purely cryptographic CTFs</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q14',this,'d',false)"><div class="opt-indicator"></div><div>Legal compliance CTFs</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q14','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q14', `Think Arduino boards and soldered hardware.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q14', `Hardware-based / embedded CTF (eCTF) challenges.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q14-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Hardware &amp; Real-World Cases score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-hardware-fill"></div></div>
+    <div class="section-score-val" id="sec-hardware-val">0/4</div>
+  </div>
+  <div class="section-header" id="sec-mindset">
+    <div class="section-icon">🧠</div>
+    <div>
+      <h2>Mindset &amp; Tips</h2>
+      <div class="sub-label">6 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Misc challenges are often the hardest because they don't fit a predictable pattern &mdash; success comes down to a deliberate approach and a willingness to expect (and work around) failure.</div>
+    <div class="q-card" id="qcard-q15">
+      <div class="q-header">
+        <div class="q-num">Q15</div>
+        <div class="q-text">When approaching an unfamiliar CTF challenge, the lecture's first recommended step is to pause and think about:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q15-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q15',this,'a',false)"><div class="opt-indicator"></div><div>Immediately trying every tool you know</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>What category the challenge likely falls under, and what clues/techniques are relevant</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Giving up if it is not obvious in 30 seconds</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Asking someone else to solve it</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q15','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q15', `Categorise before you act.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q15', `Pause to consider the likely category, visible clues, and probable techniques before diving in.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q15-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q16">
+      <div class="q-header">
+        <div class="q-num">Q16</div>
+        <div class="q-text">A common terminology confusion the lecture warns novices about is:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q16-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q16',this,'a',false)"><div class="opt-indicator"></div><div>HTTP vs HTTPS</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q16',this,'b',false)"><div class="opt-indicator"></div><div>Root vs Admin (and the different meanings of "user")</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q16',this,'c',false)"><div class="opt-indicator"></div><div>IPv4 vs IPv6</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q16',this,'d',false)"><div class="opt-indicator"></div><div>TCP vs UDP</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q16','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q16', `Different operating systems use these terms differently.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q16', `Root vs Admin, and the various meanings of "user" (device user, system user, OS user).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q16-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q17">
+      <div class="q-header">
+        <div class="q-num">Q17</div>
+        <div class="q-text">"Murphy's Law," as invoked in the lecture, means:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q17-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q17',this,'a',false)"><div class="opt-indicator"></div><div>All CTF challenges are solvable in under 10 minutes</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q17',this,'b',false)"><div class="opt-indicator"></div><div>Anything that can go wrong will go wrong &mdash; so expect failure and plan to mitigate it</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q17',this,'c',false)"><div class="opt-indicator"></div><div>Only experienced hackers can solve misc challenges</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q17',this,'d',false)"><div class="opt-indicator"></div><div>CTF challenges never involve real-world scenarios</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q17','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q17', `It's a mindset about expecting things to go sideways.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q17', `"Anything that can go wrong will go wrong" &mdash; the onus is on you to expect failure and mitigate it.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q17-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q18">
+      <div class="q-header">
+        <div class="q-num">Q18</div>
+        <div class="q-text">Why are miscellaneous ("misc") CTF challenges often considered among the hardest category?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q18-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q18',this,'a',false)"><div class="opt-indicator"></div><div>They always require the most expensive tools</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q18',this,'b',false)"><div class="opt-indicator"></div><div>They require abstract thinking, may need multiple skillsets, and don't fit a predictable pattern</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q18',this,'c',false)"><div class="opt-indicator"></div><div>They are always the shortest challenges</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q18',this,'d',false)"><div class="opt-indicator"></div><div>They never have a definitive answer</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q18','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q18', `They resist a single formula, unlike (say) a pure crypto challenge.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q18', `Misc challenges demand abstract thinking and often multiple skillsets, unlike more predictable categories.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q18-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q19">
+      <div class="q-header">
+        <div class="q-num">Q19</div>
+        <div class="q-text">Which of these is explicitly named as a technique used in social-engineering-flavoured CTF challenges?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q19-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q19',this,'a',false)"><div class="opt-indicator"></div><div>SQL injection</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q19',this,'b',false)"><div class="opt-indicator"></div><div>Dumpster diving</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q19',this,'c',false)"><div class="opt-indicator"></div><div>Buffer overflow</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q19',this,'d',false)"><div class="opt-indicator"></div><div>Port scanning</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q19','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q19', `It's a real-world social-engineering tactic, not a technical exploit.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q19', `Dumpster diving (alongside phishing and baiting).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q19-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q20">
+      <div class="q-header">
+        <div class="q-num">Q20</div>
+        <div class="q-text">For image-based misc challenges, the lecture suggests checking for:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q20-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q20',this,'a',false)"><div class="opt-indicator"></div><div>Only the file's creation date</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>Hidden text, zooming in for clues, and whether the image itself needs to be deciphered</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q20',this,'c',false)"><div class="opt-indicator"></div><div>Whether the image was taken on a smartphone</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>The image's colour palette only</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q20','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q20', `Look closer, and think about whether the image is itself the puzzle.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q20', `Check for hidden text, zoom in for visual clues, and consider whether the image itself needs deciphering (e.g. steganography).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q20-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Mindset &amp; Tips score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-mindset-fill"></div></div>
+    <div class="section-score-val" id="sec-mindset-val">0/6</div>
+  </div>
+
+  <div class="results-panel" id="results-panel">
+    <div class="results-grade" id="results-grade">&mdash;</div>
+    <div class="results-label" id="results-label">Complete all questions to see your final score</div>
+    <div class="results-breakdown" id="results-breakdown"></div>
+  </div>
+</div>
+
+<script>
+
+const state = { answers: {}, correct: {}, startTime: Date.now() };
+
+const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 2, "q6": 1, "q7": 1, "q8": 1, "q9": 1, "q10": 1, "q11": 1, "q12": 1, "q13": 1, "q14": 1, "q15": 1, "q16": 1, "q17": 1, "q18": 1, "q19": 1, "q20": 1};
+
+const sections = {"categories": {"label": "Challenge Categories", "qs": ["q1", "q2", "q3"]}, "social": {"label": "Social Engineering & OSINT", "qs": ["q4", "q5", "q6", "q7", "q8", "q9", "q10"]}, "hardware": {"label": "Hardware & Real-World Cases", "qs": ["q11", "q12", "q13", "q14"]}, "mindset": {"label": "Mindset & Tips", "qs": ["q15", "q16", "q17", "q18", "q19", "q20"]}};
+
+const allQs = Object.values(sections).flatMap(s => s.qs);
+const maxMarks = allQs.reduce((s,q) => s + marks[q], 0);
+
+function updateTimer() {
+  const e = Math.floor((Date.now()-state.startTime)/1000);
+  document.getElementById('timer').textContent = `${String(Math.floor(e/60)).padStart(2,'0')}:${String(e%60).padStart(2,'0')}`;
+}
+setInterval(updateTimer, 1000);
+
+function selectOpt(qid, el, val, isMulti) {
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  if (!isMulti) {
+    opts.forEach(o => {
+      o.classList.remove('selected');
+      o.querySelector('.opt-indicator').textContent = '';
+    });
+    el.classList.add('selected');
+    el.querySelector('.opt-indicator').textContent = '\u2713';
+    state.answers[qid] = val;
+  } else {
+    if (!state.answers[qid]) state.answers[qid] = [];
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      el.querySelector('.opt-indicator').textContent = val.toUpperCase();
+      state.answers[qid] = state.answers[qid].filter(v => v !== val);
+    } else {
+      el.classList.add('selected');
+      el.querySelector('.opt-indicator').textContent = '\u2713';
+      state.answers[qid].push(val);
+    }
+  }
+}
+
+function checkMCQ(qid, correctVal) {
+  const selected = state.answers[qid];
+  if (!selected) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = selected === correctVal;
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (v === correctVal) opt.classList.add('correct');
+    else if (opt.classList.contains('selected') && !isCorrect) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkMulti(qid, correctVals) {
+  const selected = state.answers[qid] || [];
+  if (!selected.length) { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const isCorrect = [...selected].sort().join('') === [...correctVals].sort().join('');
+  const opts = document.querySelectorAll(`#${qid}-opts .mcq-opt`);
+  opts.forEach(opt => {
+    opt.classList.add('disabled');
+    const v = opt.dataset.val;
+    if (correctVals.includes(v)) opt.classList.add('correct');
+    else if (opt.classList.contains('selected')) opt.classList.add('wrong');
+  });
+  markResult(qid, isCorrect);
+}
+
+function checkNum(qid, correctVal, tolerance) {
+  tolerance = tolerance || 0;
+  const input = document.getElementById(`${qid}-ans`);
+  if (!input || input.value === '') { shakeCard(qid); return; }
+  if (state.correct[qid] !== undefined) return;
+  const val = parseFloat(input.value);
+  const isCorrect = !isNaN(val) && Math.abs(val - correctVal) <= tolerance;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  markResult(qid, isCorrect);
+}
+
+function markResult(qid, isCorrect) {
+  state.correct[qid] = isCorrect;
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+  if (isCorrect) card.classList.add('pulse-correct');
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = isCorrect
+    ? `\u2705 <strong>Correct!</strong> +${marks[qid]} mark${marks[qid]>1?'s':''}`
+    : `\u274c <strong>Not quite.</strong> Check the hint or reveal the answer below.`;
+  updateScores();
+}
+
+function showHint(qid, hintText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  if (state.correct[qid] !== undefined) return;
+  fb.className = 'feedback show hint-fb';
+  fb.innerHTML = `\ud83d\udca1 <strong>Hint:</strong> ${hintText}`;
+}
+
+function revealAnswer(qid, answerText) {
+  const fb = document.getElementById(`${qid}-fb`);
+  fb.className = 'feedback show reveal-fb';
+  fb.innerHTML = `\ud83d\udcd6 <strong>Answer:</strong> ${answerText}`;
+  if (state.correct[qid] === undefined) { state.correct[qid] = false; updateScores(); }
+}
+
+function shakeCard(qid) {
+  const card = document.getElementById(`qcard-${qid}`);
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+}
+
+function updateScores() {
+  let totalScore = 0, totalAnswered = 0;
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    let secScore = 0;
+    sec.qs.forEach(qid => {
+      if (state.correct[qid] === true) { secScore += marks[qid]; totalScore += marks[qid]; }
+      if (state.correct[qid] !== undefined) totalAnswered++;
+    });
+    const fill = document.getElementById(`sec-${key}-fill`);
+    const val = document.getElementById(`sec-${key}-val`);
+    if (fill) fill.style.width = (secScore/secMax)*100 + '%';
+    if (val) val.textContent = `${secScore}/${secMax}`;
+  }
+  document.getElementById('global-score').textContent = `${totalScore} / ${maxMarks}`;
+  document.getElementById('progress-bar').style.width = `${(totalAnswered/allQs.length)*100}%`;
+  if (totalAnswered === allQs.length) showResults(totalScore);
+}
+
+function showResults(total) {
+  const pct = Math.round((total/maxMarks)*100);
+  const grade = pct>=85?'\ud83c\udfc6 Excellent!':pct>=70?'\u2b50 Great Job!':pct>=55?'\ud83d\udc4d Good Effort':'\ud83d\udcda Keep Practising';
+  const elapsed = Math.floor((Date.now()-state.startTime)/1000);
+  const mins=Math.floor(elapsed/60), secs=elapsed%60;
+  document.getElementById('results-grade').textContent = `${pct}%`;
+  document.getElementById('results-label').textContent = grade;
+  const bd = document.getElementById('results-breakdown');
+  bd.innerHTML = '';
+  for (const [key, sec] of Object.entries(sections)) {
+    const secMax = sec.qs.reduce((s,q) => s+marks[q], 0);
+    const secScore = sec.qs.reduce((s,q) => s + (state.correct[q] ? marks[q] : 0), 0);
+    bd.innerHTML += `<div class="rb-chip">${sec.label}<span class="rb-val">${secScore}/${secMax}</span></div>`;
+  }
+  bd.innerHTML += `<div class="rb-chip">Time<span class="rb-val">${mins}m ${secs}s</span></div>`;
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior:'smooth', block:'center' });
+  if (pct >= 70) launchConfetti();
+  try {
+    localStorage.setItem(`s5-misc-ctf_${Date.now()}`, JSON.stringify({ date: new Date().toISOString(), pct, total, time: `${mins}m${secs}s` }));
+  } catch(e) {}
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#3ecf8e','#ffffff','#4f8ef7','#3ecf8e','#f5a623'];
+  const pieces = Array.from({length:120}, (_, i) => ({
+    x:(i*53)%canvas.width, y:-((i*37)%canvas.height),
+    w:(i%7)+4, h:(i%5)+3,
+    color:colors[i%colors.length],
+    rot:(i%6), vy:(i%4)+2, vx:((i%5)-2)*0.4, vr:((i%5)-2)*0.04
+  }));
+  let frame=0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle=p.color; ctx.globalAlpha=0.85;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+      p.y+=p.vy; p.x+=p.vx; p.rot+=p.vr;
+    });
+    frame++;
+    if(frame<200) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter') {
+    const active = document.activeElement;
+    if (active && active.classList.contains('num-input')) {
+      active.closest('.q-body')?.querySelector('.btn-check')?.click();
+    }
+  }
+});
+
+</script>
+</body>
+</html>
