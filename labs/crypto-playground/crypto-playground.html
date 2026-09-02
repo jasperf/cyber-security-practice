@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crypto Playground &middot; Hands-On Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117; --surface: #181c27; --surface2: #1e2336; --border: #2a3050;
+  --accent: #a370f7; --accent-rgb: 163,112,247;
+  --text: #e8eaf0; --text-muted: #7a84a0; --text-dim: #4a5270;
+  --correct: #2ecc71; --wrong: #e74c3c;
+  --font-display: 'Fraunces', Georgia, serif; --font-body: 'Literata', Georgia, serif; --font-mono: 'DM Mono', monospace;
+  --radius: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.6; }
+.topbar { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 28px; height: 58px; gap: 16px; flex-wrap: wrap; row-gap: 8px; }
+.topbar-left { display: flex; align-items: center; gap: 14px; }
+.logo { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.logo span { color: var(--accent); }
+.week-badge { font-family: var(--font-mono); font-size: 0.7rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; }
+.back-link { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-decoration: none; }
+.back-link:hover { color: var(--accent); }
+.score-pill { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 5px 16px 5px 10px; }
+.score-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.score-val { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; color: var(--accent); min-width: 52px; text-align: right; }
+.progress-wrap { height: 3px; background: var(--border); }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #ffffff40); width: 0%; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.hero { position: relative; z-index: 1; padding: 52px 28px 24px; max-width: 900px; margin: 0 auto; }
+.hero-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.1; letter-spacing: -1px; margin-bottom: 14px; }
+.hero h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { color: var(--text-muted); font-size: 1.02rem; max-width: 640px; line-height: 1.7; }
+.hero-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.hero-chip { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.3px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--text-muted); }
+.section-tabs { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 16px 28px 24px; display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-tab { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.5px; padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); text-decoration: none; transition: all 0.2s; }
+.sub-tab:hover { border-color: var(--accent); color: var(--text); }
+.main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 28px 80px; }
+.section-header { display: flex; align-items: center; gap: 14px; margin: 44px 0 20px; }
+.section-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; background: rgba(var(--accent-rgb),0.15); }
+.section-header h2 { font-family: var(--font-display); font-size: 1.45rem; font-weight: 600; letter-spacing: -0.3px; }
+.section-header .sub-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.info-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.65; }
+.info-box strong, .info-box em { color: var(--text); }
+.info-box code, .lab-card code { font-family: var(--font-mono); background: var(--bg); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 0.84em; }
+
+/* LAB CARD */
+.lab-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; animation: slideIn 0.35s ease both; }
+.lab-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px 12px; border-bottom: 1px solid var(--border); }
+.lab-tag { font-family: var(--font-mono); font-size: 0.72rem; background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; margin-top: 2px; }
+.lab-title { font-size: 0.98rem; color: var(--text); flex: 1; line-height: 1.5; font-family: var(--font-display); font-weight: 600; }
+.lab-title small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+.lab-body { padding: 16px 20px; }
+
+/* FORM CONTROLS */
+label.field-label { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin: 0 0 6px; }
+textarea, input[type=text], input[type=password], select { width: 100%; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 0.9rem; padding: 10px 12px; outline: none; transition: border-color 0.2s; resize: vertical; line-height: 1.55; }
+textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+textarea { min-height: 68px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.row > div { flex: 1; min-width: 130px; }
+.spacer { margin-top: 14px; }
+.btn { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.3px; padding: 9px 16px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.18s; }
+.btn-primary { background: var(--accent); color: #0f1117; }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn-ghost { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.seg button { font-family: var(--font-mono); font-size: 0.74rem; padding: 7px 14px; background: var(--surface2); border: none; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.seg button.active { background: var(--accent); color: #0f1117; }
+
+/* OUTPUT */
+.out { font-family: var(--font-mono); font-size: 0.82rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin-top: 6px; word-break: break-all; white-space: pre-wrap; line-height: 1.7; color: var(--text); min-height: 20px; }
+.out.empty { color: var(--text-dim); }
+.hashline { display: flex; gap: 12px; align-items: baseline; padding: 5px 0; border-bottom: 1px dashed var(--border); }
+.hashline:last-child { border-bottom: none; }
+.hashname { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); min-width: 84px; flex-shrink: 0; }
+.hashval { font-family: var(--font-mono); font-size: 0.8rem; word-break: break-all; color: var(--text); }
+.hashval .diff { color: var(--wrong); font-weight: 500; background: rgba(231,76,60,0.14); border-radius: 2px; }
+.hint-text { font-size: 0.82rem; color: var(--text-muted); margin-top: 8px; line-height: 1.6; }
+.hint-text strong { color: var(--text); }
+.badge-good { color: var(--correct); }
+.badge-bad { color: var(--wrong); }
+.canvas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-top: 6px; }
+.canvas-cell { text-align: center; }
+.canvas-cell canvas { width: 100%; max-width: 200px; image-rendering: pixelated; border: 1px solid var(--border); border-radius: 6px; background: #fff; }
+.canvas-cell .cap { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; display: block; }
+.avalanche-bits { font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.5; word-break: break-all; margin-top: 8px; }
+.avalanche-bits .on { color: var(--accent); } .avalanche-bits .off { color: var(--text-dim); }
+
+/* CTF */
+.ctf-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.3s; }
+.ctf-card.solved { border-color: var(--correct); }
+.ctf-head { display: flex; align-items: flex-start; gap: 14px; padding: 15px 20px 11px; border-bottom: 1px solid var(--border); }
+.ctf-pts { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); background: rgba(var(--accent-rgb),0.1); border: 1px solid rgba(var(--accent-rgb),0.2); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.ctf-body { padding: 14px 20px; }
+.ctf-payload { font-family: var(--font-mono); font-size: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; margin: 4px 0 12px; word-break: break-all; color: var(--text-muted); }
+.flag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.flag-row input { flex: 1; min-width: 180px; }
+.ctf-fb { display: none; margin-top: 10px; padding: 9px 13px; border-radius: 6px; font-size: 0.85rem; line-height: 1.55; }
+.ctf-fb.show { display: block; }
+.ctf-fb.ok { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); color: #7ef5b0; }
+.ctf-fb.no { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); color: #f5a0a0; }
+.ctf-fb.hint { background: rgba(var(--accent-rgb),0.08); border: 1px solid rgba(var(--accent-rgb),0.25); color: var(--accent); }
+.results-panel { display: none; background: var(--surface); border: 1px solid var(--accent); border-radius: 14px; padding: 32px; margin-top: 30px; text-align: center; animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.results-panel.show { display: block; }
+.results-grade { font-family: var(--font-display); font-size: 3.4rem; font-weight: 700; line-height: 1; margin-bottom: 8px; color: var(--accent); }
+.results-label { font-size: 0.92rem; color: var(--text-muted); }
+#confetti-canvas { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; }
+@keyframes slideIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn { from { opacity:0; transform:scale(0.92) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.shake { animation: shake 0.4s ease; }
+@media (max-width: 600px) {
+  .topbar { padding: 10px 16px; height: auto; flex-wrap: wrap; row-gap: 8px; }
+  .topbar-left { flex-direction: column; align-items: flex-start; gap: 3px; }
+  .topbar > div:last-child { flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+  .hero, .section-tabs, .main { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">Cyber<span>Sec</span> Practice</div>
+    <div class="week-badge">Lab &middot; Crypto Playground</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a href="../../index.html" class="back-link">&larr; All sessions</a>
+    <div class="score-pill"><div class="score-label">Flags</div><div class="score-val" id="global-score">0 / 6</div></div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Hands-On Lab &middot; Session 1 companion</div>
+  <h1>Crypto <em>Playground</em></h1>
+  <div class="hero-sub">The Session&nbsp;1 quiz asks which mode leaks patterns. This lab lets you <em>watch it happen</em> &mdash; hash text and see the avalanche effect, encrypt an image in ECB until the picture bleeds through the ciphertext, break a Caesar cipher by letter frequency, generate the same Ed25519 keypair your SSH keys use, and solve six flags. Everything runs in your browser with the native WebCrypto API. Nothing is sent anywhere.</div>
+  <div class="hero-meta">
+    <div class="hero-chip">WebCrypto &amp; hand-rolled AES</div>
+    <div class="hero-chip">The ECB penguin, live</div>
+    <div class="hero-chip">Ed25519 SSH keys</div>
+    <div class="hero-chip">6 CTF flags</div>
+  </div>
+</div>
+
+<div class="section-tabs">
+  <a href="#sec-hash" class="sub-tab">Hash Lab</a>
+  <a href="#sec-encode" class="sub-tab">Encoding Bench</a>
+  <a href="#sec-caesar" class="sub-tab">Caesar Breaker</a>
+  <a href="#sec-aes" class="sub-tab">AES-GCM Vault</a>
+  <a href="#sec-sign" class="sub-tab">Ed25519 Keys</a>
+  <a href="#sec-ecb" class="sub-tab">ECB Penguin</a>
+  <a href="#sec-ctf" class="sub-tab">CTF Flags</a>
+</div>
+
+<div class="main">
+
+  <!-- ===================== HASH LAB ===================== -->
+  <div class="section-header" id="sec-hash">
+    <div class="section-icon">#️⃣</div>
+    <div><h2>Hash Lab</h2><div class="sub-label">One-way functions &amp; the avalanche effect</div></div>
+  </div>
+  <div class="info-box">A cryptographic hash maps any input to a fixed-size digest, one-way and deterministically. Change a <strong>single bit</strong> of input and roughly half the output bits flip &mdash; the <em>avalanche effect</em>. Type below and watch MD5, SHA-1, SHA-256 and SHA-512 update live. <strong>MD5 and SHA-1 are shown as broken-by-example, not for real use.</strong></div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">H1</div><div class="lab-title">Live digests<small>Every algorithm, recomputed on every keystroke.</small></div></div>
+    <div class="lab-body">
+      <label class="field-label" for="hash-in">Input text</label>
+      <textarea id="hash-in" oninput="renderHashes()">The quick brown fox jumps over the lazy dog</textarea>
+      <div id="hash-out" class="spacer"></div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">H2</div><div class="lab-title">Avalanche visualiser<small>Two inputs one edit apart. Differing hex digits of the SHA-256 are highlighted.</small></div></div>
+    <div class="lab-body">
+      <div class="row">
+        <div><label class="field-label" for="av-a">Input A</label><input type="text" id="av-a" value="password" oninput="renderAvalanche()"></div>
+        <div><label class="field-label" for="av-b">Input B</label><input type="text" id="av-b" value="Password" oninput="renderAvalanche()"></div>
+      </div>
+      <div class="spacer">
+        <div class="hashline"><span class="hashname">A · sha256</span><span class="hashval" id="av-ha"></span></div>
+        <div class="hashline"><span class="hashname">B · sha256</span><span class="hashval" id="av-hb"></span></div>
+      </div>
+      <div class="hint-text" id="av-stat"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ENCODING BENCH ===================== -->
+  <div class="section-header" id="sec-encode">
+    <div class="section-icon">🔁</div>
+    <div><h2>Encoding Bench</h2><div class="sub-label">Encoding is not encryption</div></div>
+  </div>
+  <div class="info-box">CTF challenges love to wrap a flag in layers of <strong>encoding</strong> &mdash; Base64, hex, ROT13, single-byte XOR. None of it is secret; anyone can reverse it. This bench chains transforms so you can peel layers off (or stack them on).</div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">E1</div><div class="lab-title">Transform bench<small>Pick a direction and an operation; feed the output back into the input to chain.</small></div></div>
+    <div class="lab-body">
+      <label class="field-label" for="enc-in">Input</label>
+      <textarea id="enc-in" oninput="runEncode()">flag{layers_of_encoding}</textarea>
+      <div class="btn-row" style="margin-top:12px;">
+        <div class="seg" id="enc-dir">
+          <button class="active" onclick="setDir('fwd',this)">Apply →</button>
+          <button onclick="setDir('rev',this)">Reverse ←</button>
+        </div>
+        <select id="enc-op" onchange="runEncode()" style="max-width:220px;">
+          <option value="base64">Base64</option>
+          <option value="hex">Hex</option>
+          <option value="rot13">ROT13</option>
+          <option value="xor">XOR (single byte)</option>
+          <option value="reverse">Reverse string</option>
+        </select>
+        <input type="text" id="enc-key" placeholder="XOR key (0x5a or 90)" style="max-width:180px;" oninput="runEncode()">
+      </div>
+      <label class="field-label spacer" style="margin-top:14px;">Output</label>
+      <div class="out empty" id="enc-out">—</div>
+      <div class="btn-row"><button class="btn btn-ghost" onclick="feedback()">↺ Use output as input</button></div>
+    </div>
+  </div>
+
+  <!-- ===================== CAESAR BREAKER ===================== -->
+  <div class="section-header" id="sec-caesar">
+    <div class="section-icon">🔤</div>
+    <div><h2>Caesar Breaker</h2><div class="sub-label">Frequency analysis, automated</div></div>
+  </div>
+  <div class="info-box">Session&nbsp;1 Q6–Q7: a substitution cipher falls to <strong>frequency analysis</strong> given ~50 characters. A Caesar cipher is the simplest case &mdash; only 26 keys. This breaker scores all 26 shifts by <strong>&chi;&sup2; distance</strong> from English letter frequencies and ranks the most-likely plaintext first. No key needed.</div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">C1</div><div class="lab-title">Auto-crack a Caesar cipher<small>Paste ciphertext; the best-fitting shift floats to the top.</small></div></div>
+    <div class="lab-body">
+      <label class="field-label" for="caesar-in">Ciphertext</label>
+      <textarea id="caesar-in" oninput="runCaesar()">Wkh vhfuhw phvvdjh lv klgghq lq sodlq vljkw xvlqj d vkliw flskhu</textarea>
+      <div id="caesar-out" class="spacer"></div>
+    </div>
+  </div>
+
+  <!-- ===================== AES-GCM VAULT ===================== -->
+  <div class="section-header" id="sec-aes">
+    <div class="section-icon">🔐</div>
+    <div><h2>AES-GCM Vault</h2><div class="sub-label">Authenticated encryption, done right</div></div>
+  </div>
+  <div class="info-box">This is the <strong>correct</strong> way (Session&nbsp;1 Q11): AES-256 in <strong>GCM</strong> mode, with the key stretched from your passphrase via <strong>PBKDF2</strong> (100k iterations, SHA-256). A random <strong>salt</strong> and <strong>IV</strong> are generated per message and shown to you &mdash; they are not secret, but must never repeat. GCM also <em>authenticates</em>: flip one bit of ciphertext and decryption refuses (Q12's lesson, enforced).</div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">A1</div><div class="lab-title">Encrypt &amp; decrypt<small>The output blob packs salt · IV · ciphertext+tag, Base64-encoded. Paste it back to decrypt.</small></div></div>
+    <div class="lab-body">
+      <label class="field-label" for="aes-msg">Message / blob</label>
+      <textarea id="aes-msg">attack at dawn</textarea>
+      <div class="row spacer" style="margin-top:12px;">
+        <div><label class="field-label" for="aes-pass">Passphrase</label><input type="text" id="aes-pass" value="correct horse battery staple"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="aesEncrypt()">🔒 Encrypt</button>
+        <button class="btn btn-ghost" onclick="aesDecrypt()">🔓 Decrypt</button>
+      </div>
+      <div class="out empty spacer" id="aes-out" style="margin-top:14px;">—</div>
+      <div class="hint-text" id="aes-meta"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ED25519 SIGNING ===================== -->
+  <div class="section-header" id="sec-sign">
+    <div class="section-icon">🔑</div>
+    <div><h2>Ed25519 &mdash; the keys behind SSH</h2><div class="sub-label">Signatures prove identity, they don't hide data</div></div>
+  </div>
+  <div class="info-box">When you run <code>ssh-keygen -t ed25519</code> on this Mac, this is the maths you get. Ed25519 is a <strong>public-key signature</strong> scheme, not encryption: the <strong>private key signs</strong>, the <strong>public key verifies</strong>. That is exactly how SSH proves who you are without ever sending a password &mdash; the server holds your public key, you prove you hold the matching private one. Generate a keypair below, sign a message, then tamper with it and watch verification fail. The public key even renders as a real <code>SHA256:</code> fingerprint, identical to what <code>ssh-keygen -lf</code> prints.</div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">K1</div><div class="lab-title">Generate a keypair &amp; sign<small>The private key never leaves this page. The signature is verifiable by anyone holding the public key &mdash; and by no one else.</small></div></div>
+    <div class="lab-body">
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" onclick="genKeypair()">🔑 Generate Ed25519 keypair</button>
+      </div>
+      <div id="sign-keys" class="hint-text" style="margin-top:12px;"></div>
+      <div id="sign-area" style="display:none;">
+        <label class="field-label spacer" style="margin-top:16px;" for="sign-msg">Message to sign</label>
+        <textarea id="sign-msg">I really am who I say I am.</textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="signMsg()">✍️ Sign</button>
+          <button class="btn btn-ghost" onclick="verifyMsg()">✅ Verify</button>
+          <button class="btn btn-ghost" onclick="tamperMsg()">😈 Tamper &amp; re-verify</button>
+        </div>
+        <label class="field-label spacer" style="margin-top:14px;">Signature (hex)</label>
+        <div class="out empty" id="sign-out">—</div>
+        <div class="hint-text" id="sign-meta"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ECB PENGUIN ===================== -->
+  <div class="section-header" id="sec-ecb">
+    <div class="section-icon">🐧</div>
+    <div><h2>The ECB Penguin</h2><div class="sub-label">Watch a broken mode leak the picture</div></div>
+  </div>
+  <div class="info-box">Session&nbsp;1 Q10's famous example, made real. The same image is encrypted with the same AES key twice &mdash; once in <strong>ECB</strong> (each 16-byte block encrypted independently) and once in <strong>CTR</strong> (a proper keystream mode). WebCrypto refuses to expose ECB precisely because it is unsafe, so this runs a hand-rolled AES-128 (verified against the FIPS-197 vectors). In ECB, identical plaintext blocks &rarr; identical ciphertext blocks, so the penguin's flat regions survive. CTR looks like noise.</div>
+
+  <div class="lab-card">
+    <div class="lab-header"><div class="lab-tag">P1</div><div class="lab-title">Encrypt an image, two ways<small>Same key, same plaintext. Only the mode differs.</small></div></div>
+    <div class="lab-body">
+      <div class="btn-row" style="margin-top:0;">
+        <button class="btn btn-primary" onclick="runEcbDemo()">🔒 Encrypt the penguin</button>
+        <button class="btn btn-ghost" onclick="drawGrid('checker')">Checkerboard</button>
+        <button class="btn btn-ghost" onclick="drawGrid('penguin')">Reset penguin</button>
+      </div>
+      <div class="canvas-grid spacer">
+        <div class="canvas-cell"><canvas id="cv-plain" width="128" height="128"></canvas><span class="cap">plaintext</span></div>
+        <div class="canvas-cell"><canvas id="cv-ecb" width="128" height="128"></canvas><span class="cap">AES-ECB · leaks</span></div>
+        <div class="canvas-cell"><canvas id="cv-ctr" width="128" height="128"></canvas><span class="cap">AES-CTR · safe</span></div>
+      </div>
+      <div class="hint-text" id="ecb-stat"></div>
+    </div>
+  </div>
+
+  <!-- ===================== CTF ===================== -->
+  <div class="section-header" id="sec-ctf">
+    <div class="section-icon">🚩</div>
+    <div><h2>CTF Flags</h2><div class="sub-label">6 challenges &middot; use the tools above</div></div>
+  </div>
+  <div class="info-box">Each challenge hides a flag of the form <code>flag{...}</code>. Solve it using the benches above, then submit. Your answer is <strong>hashed in your browser and compared to a stored SHA-256</strong> &mdash; the plaintext flags are <em>not</em> in this file's source, so no peeking in view-source. Case- and whitespace-insensitive.</div>
+
+  <div class="ctf-card" id="ctf-c1">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">Layer cake<small>This Base64 decodes to text that still looks scrambled. What was done to it before Base64? (Encoding Bench.)</small></div></div>
+    <div class="ctf-body">
+      <div class="ctf-payload">c3ludHt5bmxyZWZfYnNfcmFwYnF2YXR9</div>
+      <div class="flag-row">
+        <input type="text" id="c1-in" placeholder="flag{...}" onkeydown="if(event.key==='Enter')submitFlag('c1')">
+        <button class="btn btn-primary" onclick="submitFlag('c1')">Submit</button>
+        <button class="btn btn-ghost" onclick="ctfHint('c1','Base64-decode first, then the result is ROT13. Reverse both, in that order.')">Hint</button>
+      </div>
+      <div class="ctf-fb" id="c1-fb"></div>
+    </div>
+  </div>
+
+  <div class="ctf-card" id="ctf-c2">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">A single byte of "encryption"<small>This hex was XORed with one repeating byte. Find the key that makes it readable. (Encoding Bench → XOR, reverse.)</small></div></div>
+    <div class="ctf-body">
+      <div class="ctf-payload">3c363b3d212235280533290534352e053f343928232a2e33353427</div>
+      <div class="flag-row">
+        <input type="text" id="c2-in" placeholder="flag{...}" onkeydown="if(event.key==='Enter')submitFlag('c2')">
+        <button class="btn btn-primary" onclick="submitFlag('c2')">Submit</button>
+        <button class="btn btn-ghost" onclick="ctfHint('c2','XOR is symmetric: decode = same op. The flag starts with &quot;flag&quot; — XOR the first ciphertext byte 0x3c with &quot;f&quot; (0x66) to recover the key. Or just try all 256.')">Hint</button>
+      </div>
+      <div class="ctf-fb" id="c2-fb"></div>
+    </div>
+  </div>
+
+  <div class="ctf-card" id="ctf-c3">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">No key required<small>A Caesar-shifted sentence hides a flag. Let frequency analysis do the work. (Caesar Breaker.)</small></div></div>
+    <div class="ctf-body">
+      <div class="ctf-payload">aol mshn pz mshn{mylxblujf_huhsfzpz_dpuz} huk aol zopma pz lhzf av mpuk dpao mylxblujf huhsfzpz</div>
+      <div class="flag-row">
+        <input type="text" id="c3-in" placeholder="flag{...}" onkeydown="if(event.key==='Enter')submitFlag('c3')">
+        <button class="btn btn-primary" onclick="submitFlag('c3')">Submit</button>
+        <button class="btn btn-ghost" onclick="ctfHint('c3','Paste the whole line into the Caesar Breaker; the top-ranked shift (7) is the answer. Submit only the flag{...} part.')">Hint</button>
+      </div>
+      <div class="ctf-fb" id="c3-fb"></div>
+    </div>
+  </div>
+
+  <div class="ctf-card" id="ctf-c4">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">The 4-digit safe<small>An MD5 of a 4-digit PIN. MD5 has no brute-force resistance for a tiny space like this. Recover the PIN; the flag is <code>flag{PIN}</code>.</small></div></div>
+    <div class="ctf-body">
+      <div class="ctf-payload">88cf91a1aef212f3c2cd12406983427d</div>
+      <div class="flag-row">
+        <input type="text" id="c4-in" placeholder="flag{....}" onkeydown="if(event.key==='Enter')submitFlag('c4')">
+        <button class="btn btn-primary" onclick="submitFlag('c4')">Submit</button>
+        <button class="btn btn-ghost" onclick="bruteC4()">Auto-crack (0000–9999)</button>
+      </div>
+      <div class="ctf-fb" id="c4-fb"></div>
+    </div>
+  </div>
+
+  <div class="ctf-card" id="ctf-c5">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">Chained vault<small>This is an AES-GCM Vault blob. Its passphrase is <em>the flag you recovered in challenge 3</em>. Decrypt it in the Vault, then submit what's inside.</small></div></div>
+    <div class="ctf-body">
+      <div class="ctf-payload">nEoed7MC2GURrzyQK25Uxz+BDWKlR+kcdLAo1rJ2TbBc3/eDr4jYdIaHElqvnCNRZSHq/eyUEbZLnHddQtQzVn3xLYM=</div>
+      <div class="flag-row">
+        <input type="text" id="c5-in" placeholder="flag{...}" onkeydown="if(event.key==='Enter')submitFlag('c5')">
+        <button class="btn btn-primary" onclick="submitFlag('c5')">Submit</button>
+        <button class="btn btn-ghost" onclick="ctfHint('c5','Copy this blob into the AES-GCM Vault message box, set the passphrase to the flag{...} from challenge 3, and hit Decrypt.')">Hint</button>
+      </div>
+      <div class="ctf-fb" id="c5-fb"></div>
+    </div>
+  </div>
+
+  <div class="ctf-card" id="ctf-c6">
+    <div class="ctf-head"><div class="ctf-pts">1 flag</div><div class="lab-title" style="flex:1">Read the mode<small>You just watched two ciphertexts of the same penguin. One mode leaked the image because identical plaintext blocks map to identical ciphertext blocks. The flag is <code>flag{X}</code> where X is that one-word property. (Hint: the opposite of "secure".)</small></div></div>
+    <div class="ctf-body">
+      <div class="flag-row">
+        <input type="text" id="c6-in" placeholder="flag{...}" onkeydown="if(event.key==='Enter')submitFlag('c6')">
+        <button class="btn btn-primary" onclick="submitFlag('c6')">Submit</button>
+        <button class="btn btn-ghost" onclick="ctfHint('c6','ECB is the mode that leaked. The flag is a single lowercase adjective describing ECB. Nine letters, starts with i.')">Hint</button>
+      </div>
+      <div class="ctf-fb" id="c6-fb"></div>
+    </div>
+  </div>
+
+  <div class="results-panel" id="results-panel">
+    <div class="results-grade" id="results-grade">🏆</div>
+    <div class="results-label" id="results-label">All six flags captured — you drove every tool on the page.</div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   Crypto core — verified against FIPS-197 & RFC 1321 vectors.
+   ============================================================ */
+const AES = (() => {
+  const sbox = new Uint8Array(256);
+  (function () {
+    const rotl8 = (x, s) => ((x << s) | (x >>> (8 - s))) & 0xFF;
+    let p = 1, q = 1;
+    do {
+      p = (p ^ ((p << 1) & 0xFF) ^ ((p & 0x80) ? 0x1B : 0)) & 0xFF;
+      q = (q ^ ((q << 1) & 0xFF)) & 0xFF; q = (q ^ ((q << 2) & 0xFF)) & 0xFF; q = (q ^ ((q << 4) & 0xFF)) & 0xFF;
+      if (q & 0x80) q ^= 0x09;
+      sbox[p] = (q ^ rotl8(q,1) ^ rotl8(q,2) ^ rotl8(q,3) ^ rotl8(q,4) ^ 0x63) & 0xFF;
+    } while (p !== 1);
+    sbox[0] = 0x63;
+  })();
+  const xtime = b => ((b << 1) ^ ((b & 0x80) ? 0x1B : 0)) & 0xFF;
+  function expandKey(key) {
+    const w = new Uint8Array(176); w.set(key.subarray(0,16)); let rcon = 1;
+    for (let i = 16; i < 176; i += 4) {
+      let t = [w[i-4],w[i-3],w[i-2],w[i-1]];
+      if (i % 16 === 0) { t = [sbox[t[1]] ^ rcon, sbox[t[2]], sbox[t[3]], sbox[t[0]]]; rcon = xtime(rcon); }
+      for (let j = 0; j < 4; j++) w[i+j] = w[i-16+j] ^ t[j];
+    }
+    return w;
+  }
+  function encryptBlock(s, w) {
+    for (let i = 0; i < 16; i++) s[i] ^= w[i];
+    for (let round = 1; round <= 10; round++) {
+      for (let i = 0; i < 16; i++) s[i] = sbox[s[i]];
+      let t;
+      t = s[1]; s[1]=s[5]; s[5]=s[9]; s[9]=s[13]; s[13]=t;
+      t = s[2]; s[2]=s[10]; s[10]=t; t = s[6]; s[6]=s[14]; s[14]=t;
+      t = s[15]; s[15]=s[11]; s[11]=s[7]; s[7]=s[3]; s[3]=t;
+      if (round !== 10) for (let c = 0; c < 16; c += 4) {
+        const a0=s[c],a1=s[c+1],a2=s[c+2],a3=s[c+3], x=a0^a1^a2^a3;
+        s[c]=a0^x^xtime(a0^a1); s[c+1]=a1^x^xtime(a1^a2); s[c+2]=a2^x^xtime(a2^a3); s[c+3]=a3^x^xtime(a3^a0);
+      }
+      for (let i = 0; i < 16; i++) s[i] ^= w[round*16+i];
+    }
+    return s;
+  }
+  return {
+    ecb(data, key) {
+      const w = expandKey(key), out = new Uint8Array(data.length), blocks = Math.floor(data.length/16);
+      for (let b = 0; b < blocks; b++) { const blk = data.slice(b*16,b*16+16); encryptBlock(blk,w); out.set(blk,b*16); }
+      out.set(data.subarray(blocks*16), blocks*16); return out;
+    },
+    ctr(data, key, nonce) {
+      const w = expandKey(key), out = new Uint8Array(data.length), counter = new Uint8Array(16); counter.set(nonce.subarray(0,8));
+      for (let off = 0; off < data.length; off += 16) {
+        const c = counter.slice(0); encryptBlock(c,w);
+        const n = Math.min(16, data.length-off);
+        for (let i = 0; i < n; i++) out[off+i] = data[off+i] ^ c[i];
+        for (let i = 15; i >= 8; i--) { if (++counter[i] !== 0) break; }
+      }
+      return out;
+    }
+  };
+})();
+
+function md5(bytes) {
+  const S=[7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+  const K = new Uint32Array(64); for (let i=0;i<64;i++) K[i]=Math.floor(Math.abs(Math.sin(i+1))*4294967296);
+  const len = bytes.length, padded = new Uint8Array((((len+8)>>6)+1)*64); padded.set(bytes); padded[len]=0x80;
+  const dv = new DataView(padded.buffer), bitLen = len*8;
+  dv.setUint32(padded.length-8, bitLen>>>0, true); dv.setUint32(padded.length-4, Math.floor(bitLen/4294967296), true);
+  let a0=0x67452301,b0=0xefcdab89,c0=0x98badcfe,d0=0x10325476; const M=new Uint32Array(16);
+  for (let off=0; off<padded.length; off+=64) {
+    for (let i=0;i<16;i++) M[i]=dv.getUint32(off+i*4,true);
+    let A=a0,B=b0,C=c0,D=d0;
+    for (let i=0;i<64;i++){ let F,g;
+      if(i<16){F=(B&C)|(~B&D);g=i;} else if(i<32){F=(D&B)|(~D&C);g=(5*i+1)%16;}
+      else if(i<48){F=B^C^D;g=(3*i+5)%16;} else {F=C^(B|~D);g=(7*i)%16;}
+      F=(F+A+K[i]+M[g])>>>0; A=D;D=C;C=B; B=(B+(((F<<S[i])|(F>>>(32-S[i])))>>>0))>>>0;
+    }
+    a0=(a0+A)>>>0;b0=(b0+B)>>>0;c0=(c0+C)>>>0;d0=(d0+D)>>>0;
+  }
+  const out=new Uint8Array(16),o=new DataView(out.buffer); o.setUint32(0,a0,true);o.setUint32(4,b0,true);o.setUint32(8,c0,true);o.setUint32(12,d0,true); return out;
+}
+
+const enc = new TextEncoder(), dec = new TextDecoder();
+const toHex = b => Array.from(b, x => x.toString(16).padStart(2,'0')).join('');
+const fromHex = h => new Uint8Array((h.replace(/[^0-9a-fA-F]/g,'').match(/../g)||[]).map(x=>parseInt(x,16)));
+const toB64 = b => btoa(String.fromCharCode(...b));
+const fromB64 = s => new Uint8Array(atob(s.replace(/\s/g,'')).split('').map(c=>c.charCodeAt(0)));
+async function sha(algo, bytes) { return new Uint8Array(await crypto.subtle.digest(algo, bytes)); }
+
+/* ---------- HASH LAB ---------- */
+async function renderHashes() {
+  const bytes = enc.encode(document.getElementById('hash-in').value);
+  const [s1, s256, s512] = await Promise.all([sha('SHA-1',bytes), sha('SHA-256',bytes), sha('SHA-512',bytes)]);
+  const rows = [['md5', toHex(md5(bytes)), 'broken since 2004'], ['sha-1', toHex(s1), 'broken since 2017'],
+                ['sha-256', toHex(s256), 'safe'], ['sha-512', toHex(s512), 'safe']];
+  document.getElementById('hash-out').innerHTML = rows.map(([n,v,note]) =>
+    `<div class="hashline"><span class="hashname">${n}</span><span class="hashval">${v} <span style="color:var(--text-dim);font-size:0.72rem;">· ${note}</span></span></div>`).join('');
+}
+
+async function renderAvalanche() {
+  const a = enc.encode(document.getElementById('av-a').value), b = enc.encode(document.getElementById('av-b').value);
+  const [ha, hb] = await Promise.all([sha('SHA-256',a), sha('SHA-256',b)]);
+  const hha = toHex(ha), hhb = toHex(hb);
+  const mark = (h, other) => Array.from(h, (ch,i) => ch === other[i] ? ch : `<span class="diff">${ch}</span>`).join('');
+  document.getElementById('av-ha').innerHTML = mark(hha, hhb);
+  document.getElementById('av-hb').innerHTML = mark(hhb, hha);
+  let bitDiff = 0; for (let i = 0; i < 32; i++) { let x = ha[i]^hb[i]; while (x) { bitDiff += x&1; x >>= 1; } }
+  const same = document.getElementById('av-a').value === document.getElementById('av-b').value;
+  document.getElementById('av-stat').innerHTML = same
+    ? 'Identical inputs → identical hashes. Change one character to see the avalanche.'
+    : `<strong>${bitDiff} of 256 bits differ (${Math.round(bitDiff/256*100)}%).</strong> A one-character edit scrambles roughly half the output — that is the avalanche effect.`;
+}
+
+/* ---------- ENCODING BENCH ---------- */
+let encDir = 'fwd';
+function setDir(d, el) { encDir = d; el.parentElement.querySelectorAll('button').forEach(b=>b.classList.remove('active')); el.classList.add('active'); runEncode(); }
+function rot13(s){ return s.replace(/[a-z]/gi,c=>{const b=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+13)%26+b);}); }
+function parseKey(v){ v=v.trim(); if(!v) return 0; return v.startsWith('0x')?parseInt(v,16):parseInt(v,10); }
+function runEncode() {
+  const input = document.getElementById('enc-in').value, op = document.getElementById('enc-op').value;
+  const out = document.getElementById('enc-out'); let res = '';
+  try {
+    if (op === 'base64') res = encDir==='fwd' ? toB64(enc.encode(input)) : dec.decode(fromB64(input));
+    else if (op === 'hex') res = encDir==='fwd' ? toHex(enc.encode(input)) : dec.decode(fromHex(input));
+    else if (op === 'rot13') res = rot13(input);
+    else if (op === 'reverse') res = [...input].reverse().join('');
+    else if (op === 'xor') {
+      const k = parseKey(document.getElementById('enc-key').value) & 0xFF;
+      const bytes = encDir==='fwd' ? enc.encode(input) : fromHex(input);
+      const x = bytes.map(b => b ^ k);
+      res = encDir==='fwd' ? toHex(x) : dec.decode(x);
+    }
+  } catch (e) { res = '⚠ ' + e.message; }
+  out.textContent = res || '—'; out.classList.toggle('empty', !res);
+}
+function feedback() { document.getElementById('enc-in').value = document.getElementById('enc-out').textContent; runEncode(); }
+
+/* ---------- CAESAR BREAKER ---------- */
+const FREQ = [8.17,1.49,2.78,4.25,12.70,2.23,2.02,6.09,6.97,0.15,0.77,4.03,2.41,6.75,7.51,1.93,0.10,5.99,6.33,9.06,2.76,0.98,2.36,0.15,1.97,0.07];
+function caesarShift(t,n){ return t.replace(/[a-z]/gi,c=>{const b=c<='Z'?65:97;return String.fromCharCode((c.charCodeAt(0)-b+n+26)%26+b);}); }
+function chi2(t){ const c=new Array(26).fill(0); let tot=0; for(const ch of t.toLowerCase()){const i=ch.charCodeAt(0)-97; if(i>=0&&i<26){c[i]++;tot++;}} if(!tot)return Infinity; let x=0; for(let i=0;i<26;i++){const e=tot*FREQ[i]/100; x+=(c[i]-e)**2/e;} return x; }
+function runCaesar() {
+  const t = document.getElementById('caesar-in').value;
+  const cands = Array.from({length:26},(_,s)=>({shift:s, plain:caesarShift(t,-s), score:chi2(caesarShift(t,-s))})).sort((a,b)=>a.score-b.score);
+  document.getElementById('caesar-out').innerHTML = cands.slice(0,5).map((c,i)=>
+    `<div class="hashline"><span class="hashname">${i===0?'★ ':''}shift ${c.shift}</span><span class="hashval" style="${i===0?'color:var(--accent);':''}">${c.plain.replace(/</g,'&lt;')}</span></div>`).join('');
+}
+
+/* ---------- AES-GCM VAULT ---------- */
+async function deriveKey(pass, salt) {
+  const base = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:100000,hash:'SHA-256'}, base, {name:'AES-GCM',length:256}, false, ['encrypt','decrypt']);
+}
+async function aesEncrypt() {
+  const msg = document.getElementById('aes-msg').value, pass = document.getElementById('aes-pass').value;
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pass, salt);
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv}, key, enc.encode(msg)));
+  const blob = new Uint8Array(16+12+ct.length); blob.set(salt); blob.set(iv,16); blob.set(ct,28);
+  document.getElementById('aes-msg').value = toB64(blob);
+  document.getElementById('aes-out').textContent = toB64(blob);
+  document.getElementById('aes-out').classList.remove('empty');
+  document.getElementById('aes-meta').innerHTML = `<span class="badge-good">✓ Encrypted.</span> salt <code>${toHex(salt)}</code> · IV <code>${toHex(iv)}</code> — both prepended to the blob (now in the message box, ready to Decrypt).`;
+}
+async function aesDecrypt() {
+  const meta = document.getElementById('aes-meta'), out = document.getElementById('aes-out');
+  try {
+    const blob = fromB64(document.getElementById('aes-msg').value.trim());
+    const salt = blob.slice(0,16), iv = blob.slice(16,28), ct = blob.slice(28);
+    const key = await deriveKey(document.getElementById('aes-pass').value, salt);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM',iv}, key, ct);
+    out.textContent = dec.decode(pt); out.classList.remove('empty');
+    meta.innerHTML = '<span class="badge-good">✓ Authentication tag valid — decrypted.</span>';
+  } catch (e) {
+    out.textContent = '—'; out.classList.add('empty');
+    meta.innerHTML = '<span class="badge-bad">✗ Decryption failed.</span> Wrong passphrase, or the ciphertext/tag was altered — GCM refuses to return tampered data.';
+  }
+}
+
+/* ---------- ED25519 SIGNING ---------- */
+let edKeys = null, edSig = null;
+const b64nopad = b => toB64(b).replace(/=+$/,'');
+function sshWire(raw32) {
+  const enc4 = b => { const out = new Uint8Array(4 + b.length); new DataView(out.buffer).setUint32(0, b.length); out.set(b, 4); return out; };
+  const type = enc4(new TextEncoder().encode('ssh-ed25519')), key = enc4(raw32);
+  const wire = new Uint8Array(type.length + key.length); wire.set(type); wire.set(key, type.length);
+  return wire;
+}
+async function sshFingerprint(raw32) { return 'SHA256:' + b64nopad(await sha('SHA-256', sshWire(raw32))); }
+async function genKeypair() {
+  const box = document.getElementById('sign-keys');
+  try {
+    edKeys = await crypto.subtle.generateKey({ name: 'Ed25519' }, true, ['sign','verify']);
+  } catch (e) {
+    box.innerHTML = '<span class="badge-bad">This browser\'s WebCrypto doesn\'t expose Ed25519 yet.</span> It ships in Chrome/Edge 137+ and Safari 17+. The rest of the lab works regardless.';
+    return;
+  }
+  const raw = new Uint8Array(await crypto.subtle.exportKey('raw', edKeys.publicKey));
+  const fp = await sshFingerprint(raw);
+  const authLine = 'ssh-ed25519 ' + toB64(sshWire(raw)) + ' you@crypto-playground';
+  box.innerHTML = `<span class="badge-good">✓ Keypair generated.</span> The private key stays in this page and is never shown or sent.
+    <div class="spacer"><span style="color:var(--text-dim);">public key (authorized_keys line):</span></div>
+    <div class="out" style="margin-top:4px;">${authLine}</div>
+    <div class="spacer"><span style="color:var(--text-dim);">fingerprint — matches <code>ssh-keygen -lf</code>:</span></div>
+    <div class="out" style="margin-top:4px;color:var(--accent);">${fp}</div>`;
+  document.getElementById('sign-area').style.display = 'block';
+  edSig = null; document.getElementById('sign-out').textContent = '—';
+  document.getElementById('sign-out').classList.add('empty'); document.getElementById('sign-meta').innerHTML = '';
+}
+async function signMsg() {
+  if (!edKeys) return;
+  const msg = enc.encode(document.getElementById('sign-msg').value);
+  edSig = new Uint8Array(await crypto.subtle.sign({ name:'Ed25519' }, edKeys.privateKey, msg));
+  document.getElementById('sign-out').textContent = toHex(edSig);
+  document.getElementById('sign-out').classList.remove('empty');
+  document.getElementById('sign-meta').innerHTML = '<span class="badge-good">✓ Signed.</span> 64-byte signature over this exact message. Change one character and it no longer verifies.';
+}
+async function verifyMsg() {
+  const meta = document.getElementById('sign-meta');
+  if (!edKeys || !edSig) { meta.innerHTML = 'Sign a message first.'; return; }
+  const msg = enc.encode(document.getElementById('sign-msg').value);
+  const ok = await crypto.subtle.verify({ name:'Ed25519' }, edKeys.publicKey, edSig, msg);
+  meta.innerHTML = ok
+    ? '<span class="badge-good">✓ Signature valid.</span> The public key confirms this message was signed by the matching private key, unchanged.'
+    : '<span class="badge-bad">✗ Signature invalid.</span> The message no longer matches what was signed — someone altered it, or it was signed by a different key.';
+}
+async function tamperMsg() {
+  const box = document.getElementById('sign-msg');
+  if (!edKeys || !edSig) { document.getElementById('sign-meta').innerHTML = 'Sign a message first, then tamper.'; return; }
+  box.value = box.value + ' (or am I?)';
+  await verifyMsg();
+  document.getElementById('sign-meta').innerHTML = '😈 Appended text to the message <em>after</em> signing. ' + document.getElementById('sign-meta').innerHTML;
+}
+
+/* ---------- ECB PENGUIN ---------- */
+function drawPenguin(ctx) {
+  ctx.fillStyle = '#d8e8f0'; ctx.fillRect(0,0,128,128);
+  ctx.fillStyle = '#111'; // body
+  ctx.beginPath(); ctx.ellipse(64,74,34,44,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.arc(64,34,24,0,7); ctx.fill(); // head
+  ctx.fillStyle = '#fff'; // belly
+  ctx.beginPath(); ctx.ellipse(64,80,20,32,0,0,7); ctx.fill();
+  ctx.beginPath(); ctx.arc(56,32,8,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(72,32,8,0,7); ctx.fill(); // eyes white
+  ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(57,33,3,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(71,33,3,0,7); ctx.fill();
+  ctx.fillStyle = '#f5a623'; // beak + feet
+  ctx.beginPath(); ctx.moveTo(64,38); ctx.lineTo(56,46); ctx.lineTo(72,46); ctx.closePath(); ctx.fill();
+  ctx.fillRect(48,116,16,8); ctx.fillRect(64,116,16,8);
+}
+function drawChecker(ctx) {
+  for (let y=0;y<128;y+=16) for (let x=0;x<128;x+=16) { ctx.fillStyle=((x/16+y/16)%2)?'#111':'#e8b84b'; ctx.fillRect(x,y,16,16); }
+  ctx.fillStyle='#a370f7'; ctx.fillRect(40,40,48,48);
+}
+let currentDraw = 'penguin';
+function drawGrid(kind) {
+  currentDraw = kind;
+  const ctx = document.getElementById('cv-plain').getContext('2d');
+  ctx.clearRect(0,0,128,128); (kind==='checker'?drawChecker:drawPenguin)(ctx);
+  ['cv-ecb','cv-ctr'].forEach(id => { const c=document.getElementById(id).getContext('2d'); c.fillStyle='#1e2336'; c.fillRect(0,0,128,128); });
+  document.getElementById('ecb-stat').innerHTML = 'Hit <strong>Encrypt</strong> to run AES over the pixels in both modes.';
+}
+function runEcbDemo() {
+  const src = document.getElementById('cv-plain').getContext('2d').getImageData(0,0,128,128);
+  const key = fromHex('2b7e151628aed2a6abf7158809cf4f3c'), nonce = fromHex('00000000');
+  // pack RGB (drop alpha) so 16-byte AES blocks line up with pixel groups
+  const rgb = new Uint8Array(128*128*3);
+  for (let i = 0, j = 0; i < src.data.length; i += 4, j += 3) { rgb[j]=src.data[i]; rgb[j+1]=src.data[i+1]; rgb[j+2]=src.data[i+2]; }
+  const paint = (id, cipher) => {
+    const ctx = document.getElementById(id).getContext('2d'), img = ctx.createImageData(128,128);
+    for (let i = 0, j = 0; i < img.data.length; i += 4, j += 3) { img.data[i]=cipher[j]; img.data[i+1]=cipher[j+1]; img.data[i+2]=cipher[j+2]; img.data[i+3]=255; }
+    ctx.putImageData(img,0,0);
+  };
+  paint('cv-ecb', AES.ecb(rgb, key));
+  paint('cv-ctr', AES.ctr(rgb, key, nonce));
+  document.getElementById('ecb-stat').innerHTML = '<span class="badge-bad">ECB leaks:</span> the shape is still visible because identical plaintext blocks encrypt to identical ciphertext blocks. <span class="badge-good">CTR</span> is indistinguishable from noise. Same key, same image — the mode is the whole difference.';
+}
+
+/* ---------- CTF ---------- */
+const FLAG_HASHES = {
+  c1: 'c5e898d40589069dd37514423dca1030592235b0febe8e1bb534d46340e0783a',
+  c2: '3c18d5061cd11505d63647c0f88b222c320f550d0e629b0b61ba1bb32fab8805',
+  c3: 'e006f2d78f8c44b9b1969af0642c8f6b2a6b3d8c128b25e1a45cbaa9a4dc36e2',
+  c4: 'b96e350338e97188bc644d876c93c5aaacef6f2c7be91499eb3947c6b5491231',
+  c5: 'eaef31e17ffbbacdd860bb7dae462b2787e79c9443d59cc6113401de764ba204',
+  c6: '841e5fdb77cc2905fb798b2368a172e36d4ec9043bc2bbc8131a363942fc1314',
+};
+const solved = new Set();
+async function submitFlag(id) {
+  const input = document.getElementById(`${id}-in`), fb = document.getElementById(`${id}-fb`);
+  const val = input.value.trim().toLowerCase();
+  if (!val) { input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake'); return; }
+  const h = toHex(await sha('SHA-256', enc.encode(val)));
+  if (h === FLAG_HASHES[id]) {
+    solved.add(id);
+    document.getElementById(`ctf-${id}`).classList.add('solved');
+    fb.className = 'ctf-fb show ok'; fb.innerHTML = '🚩 <strong>Captured!</strong> Flag verified against the stored hash.';
+    input.disabled = true; updateScore();
+  } else {
+    fb.className = 'ctf-fb show no'; fb.innerHTML = '✗ Not a match. Re-check your working, or try the hint.';
+  }
+}
+function ctfHint(id, text) {
+  const fb = document.getElementById(`${id}-fb`);
+  if (solved.has(id)) return;
+  fb.className = 'ctf-fb show hint'; fb.innerHTML = '💡 <strong>Hint:</strong> ' + text;
+}
+async function bruteC4() {
+  const fb = document.getElementById('c4-fb'), target = '88cf91a1aef212f3c2cd12406983427d';
+  for (let i = 0; i <= 9999; i++) {
+    const pin = String(i).padStart(4,'0');
+    if (toHex(md5(enc.encode(pin))) === target) {
+      fb.className = 'ctf-fb show hint';
+      fb.innerHTML = `💡 Found it in ${i+1} guesses: PIN = <strong>${pin}</strong>. That's why MD5 over a tiny keyspace is worthless. Now submit <code>flag{${pin}}</code>.`;
+      return;
+    }
+  }
+}
+function updateScore() {
+  document.getElementById('global-score').textContent = `${solved.size} / 6`;
+  document.getElementById('progress-bar').style.width = `${solved.size/6*100}%`;
+  if (solved.size === 6) {
+    const p = document.getElementById('results-panel'); p.classList.add('show');
+    p.scrollIntoView({behavior:'smooth', block:'center'}); launchConfetti();
+  }
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas'), ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ['#a370f7','#ffffff','#4f8ef7','#3ecf8e','#f5a623'];
+  const pieces = Array.from({length:120},(_,i)=>({x:(i*53)%canvas.width,y:-((i*37)%canvas.height),w:(i%7)+4,h:(i%5)+3,color:colors[i%colors.length],rot:(i%6),vy:(i%4)+2,vx:((i%5)-2)*0.4,vr:((i%5)-2)*0.04}));
+  let frame=0;
+  (function draw(){ ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.color;ctx.globalAlpha=0.85;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.rot+=p.vr;});
+    if(++frame<200) requestAnimationFrame(draw); else ctx.clearRect(0,0,canvas.width,canvas.height);
+  })();
+}
+
+/* ---------- INIT ---------- */
+renderHashes(); renderAvalanche(); runEncode(); runCaesar(); drawGrid('penguin');
+</script>
+</body>
+</html>
