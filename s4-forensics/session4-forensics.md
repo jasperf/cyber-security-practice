@@ -1,6 +1,6 @@
 # Session 4 · Digital Forensics
 
-**IJCO/SIMCC Cyber Security · Printable Worksheet**
+**Personal Study Notes · Printable Worksheet**
 **19 questions · 21 marks**
 
 This document contains all questions from the interactive sheet in a printable format. Write your answers directly in your notebook, then self-check afterwards using the interactive `.html` version.

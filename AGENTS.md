@@ -2,7 +2,7 @@
 
 ## Project
 
-Interactive self-marking exercise sheets built from the IJCO/SIMCC cyber security course (5 sessions: Cryptography, Networking Fundamentals, Red Teaming, Digital Forensics, Miscellaneous CTF Challenges). Each sheet is a single self-contained HTML file. No build tools, no frameworks, no CDN dependencies beyond Google Fonts. Everything works offline once loaded.
+Interactive self-marking exercise sheets, written independently for personal cyber security exam prep (5 sessions: Cryptography, Networking Fundamentals, Red Teaming, Digital Forensics, Miscellaneous CTF Challenges). Each sheet is a single self-contained HTML file. No build tools, no frameworks, no CDN dependencies beyond Google Fonts. Everything works offline once loaded.
 
 **Live site:** https://jasperf.github.io/cyber-security-practice (auto-deployed from `main` via GitHub Pages, once enabled)
 

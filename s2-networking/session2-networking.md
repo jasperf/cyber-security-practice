@@ -1,6 +1,6 @@
 # Session 2 · Networking Fundamentals
 
-**IJCO/SIMCC Cyber Security · Printable Worksheet**
+**Personal Study Notes · Printable Worksheet**
 **21 questions · 22 marks**
 
 This document contains all questions from the interactive sheet in a printable format. Write your answers directly in your notebook, then self-check afterwards using the interactive `.html` version.

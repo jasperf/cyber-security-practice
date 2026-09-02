@@ -1,6 +1,6 @@
 # Cyber Security &amp; CTF Practice
 
-Interactive self-marking exercise sheets built from the IJCO/SIMCC cyber security course material — cryptography, networking fundamentals, red teaming, digital forensics, and miscellaneous CTF challenges.
+Interactive self-marking exercise sheets I wrote for my own cyber security exam prep — cryptography, networking fundamentals, red teaming, digital forensics, and miscellaneous CTF challenges.
 
 ## Live Site
 
@@ -95,4 +95,4 @@ Pure HTML + CSS + JavaScript. No frameworks, no build tools, no CDN dependencies
 
 ---
 
-*Built from the IJCO/SIMCC cyber security class material for personal study/revision. Not affiliated with IJCO, SIMCC, or the National Cybersecurity R&amp;D Laboratory.*
+*Independent personal study notes for exam preparation, testing general cyber security concepts in my own words. Not a reproduction of any course's materials, and not affiliated with or endorsed by any course, instructor, or organization.*
