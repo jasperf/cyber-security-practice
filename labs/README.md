@@ -4,8 +4,9 @@ The quiz sheets in this repo test *recall*. These labs make you *do* the thing �
 hash it, break it, encrypt it, capture the flag. Same self-marking philosophy,
 different medium.
 
-Labs are organised in four tiers by how much setup (and risk) they need. Only
-**Tier 0** is built so far; the rest is a roadmap for future sessions.
+Labs are organised in four tiers by how much setup (and risk) they need.
+**Tier 0** and **Tier 1** are built; Tiers 2 and 3 are a roadmap for future
+sessions.
 
 ---
 
@@ -36,15 +37,30 @@ vectors; MD5 is verified against RFC 1321.
 
 ---
 
-## Tier 1 — Your machine & your LAN (roadmap)
+## Tier 1 — Your own machine ✅
 
-Uses tools already installed locally (`nmap`, `openssl`, `dig`, `whois`, `nc`,
-`tcpdump`, `python3`, `gpg`). Each lab is a markdown brief plus a `check.sh` that
-marks a verifiable answer ("how many hosts responded?", "what TTL?").
+Terminal labs against a target on `127.0.0.1`. Each lab is a markdown brief
+plus a `lab.py` that starts the target, marks your answers, and shuts it down
+again. Uses tools already on the machine (`nc`, `nmap`, `python3`).
 
-Planned: map your own subnet and identify devices by MAC OUI · capture a DNS
-query with tcpdump and decode it by hand · write a Python TCP port scanner and
-race it against nmap · hand-craft an HTTP request over `nc`.
+| Lab | What you do | Status |
+|-----|-------------|--------|
+| [01 — HTTP by Hand](./tier1-localhost/01-http-by-hand/) | Type raw HTTP/1.1 down a netcat socket against a strict local server: status lines, `Server:` banners, a 301 and its `Location`, Basic auth you base64-encode yourself, `HEAD` vs `GET`, and why a missing `Host` is a 400 · 2 flags · 15 marks | ✅ Built |
+| [02 — Port Scanner vs nmap](./tier1-localhost/02-port-scanner/) | Write a TCP connect scanner from a stub, find five services hidden on random ports, grab their banners, then race nmap — and find out why parallelism buys you nothing on loopback · 1 flag · 16 marks | ✅ Built |
+
+Targets are processes you start and stop yourself, with flags regenerated on
+every run — so the answers are never in the repo, and `check` marks against
+what the server on *your* machine actually said. See
+[tier1-localhost/README.md](./tier1-localhost/README.md) for setup, including
+Windows 11 (`ncat` in place of `nc`, or WSL2).
+
+**Written in Python, not shell**, so the labs run natively on macOS, Linux and
+Windows — a `check.sh` would have needed WSL or Git Bash just to mark an answer.
+
+### Tier 1 ideas not yet built
+- Map your own subnet and identify devices by MAC OUI (`nmap -sn`, ARP tables).
+- Capture a DNS query with `tcpdump` and decode the packet by hand.
+- Inspect a TLS handshake with `openssl s_client` against your own local server.
 
 **Scope:** `127.0.0.1` and your own LAN only. See [SCOPE.md](./SCOPE.md) before running anything.
 

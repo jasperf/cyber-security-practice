@@ -22,9 +22,35 @@ cyber-security-practice/
 ├── s2-networking/
 ├── s3-red-teaming/
 ├── s4-forensics/
-└── s5-misc-ctf/
-    each folder: sessionN-topic.html (interactive) + sessionN-topic.md (printable)
+├── s5-misc-ctf/
+│   each folder: sessionN-topic.html (interactive) + sessionN-topic.md (printable)
+└── labs/                       ← hands-on labs, tiered by setup & risk
+    ├── SCOPE.md                ← rules of engagement — read before adding a lab
+    ├── crypto-playground/      ← Tier 0: browser-only, same design system as the sheets
+    └── tier1-localhost/        ← Tier 1: terminal labs against 127.0.0.1
 ```
+
+### Labs
+
+The `labs/` tree is a different medium from the session sheets and has its own
+conventions:
+
+- **Tier 0** labs are single self-contained HTML files and follow every sheet
+  convention above (topbar, tokens, accent colour, flags checked by SHA-256).
+- **Tier 1+** labs are terminal labs: a `README.md` brief plus a `lab.py`
+  exposing `start` / `stop` / `status` / `check`, sharing `lib/labkit.py`.
+  - **Python, not shell** — `check.sh` would need WSL or Git Bash on Windows,
+    and these have to run natively on macOS, Linux and Windows 11.
+  - **Standard library only.** No `pip install`, matching the repo's no-build-
+    tools rule.
+  - Targets bind to `127.0.0.1` only, and flags are regenerated on every
+    `start` so no answer is ever committed. `check` derives expected values
+    from the live target rather than hardcoding them.
+  - Runtime files (`.lab-state`, `*.log`) are gitignored.
+  - Windows parity is a requirement, not a nice-to-have: no `nc` (use `ncat`),
+    no `printf`, use `py` not `python3`. Note both spellings in briefs.
+- Every lab brief ends with a **scope note** pointing at `labs/SCOPE.md`.
+- **Always update `labs/README.md` and `index.html`** when adding a lab.
 
 ## Commands
 
