@@ -292,13 +292,13 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       </div>
       <div class="q-body">
         <div class="mcq-options" id="q6-opts">
-          <div class="mcq-opt" data-val="a" onclick="selectOpt('q6',this,'a',false)"><div class="opt-indicator"></div><div>Quantum computing</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q6',this,'b',false)"><div class="opt-indicator"></div><div>Frequency analysis of letters/letter-pairs</div></div>
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q6',this,'a',false)"><div class="opt-indicator"></div><div>Frequency analysis of letters/letter-pairs</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q6',this,'b',false)"><div class="opt-indicator"></div><div>Quantum computing</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q6',this,'c',false)"><div class="opt-indicator"></div><div>SQL injection</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q6',this,'d',false)"><div class="opt-indicator"></div><div>The birthday paradox</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q6','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q6','a')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q6', `Some letters (like "e") are simply more common than others in English.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q6', `Frequency analysis exploits the fact that letter (and digraph, e.g. "ll") frequencies in English are non-uniform &mdash; "e" appears far more often than "z".`)">Show Answer</button>
         </div>
@@ -432,12 +432,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q12-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q12',this,'a',false)"><div class="opt-indicator"></div><div>The ciphertext becomes shorter</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q12',this,'b',false)"><div class="opt-indicator"></div><div>XOR-ing the two ciphertexts cancels the shared keystream, leaking X&#8853;Y</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q12',this,'b',false)"><div class="opt-indicator"></div><div>Nothing &mdash; CTR mode is immune to IV reuse</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q12',this,'c',false)"><div class="opt-indicator"></div><div>The AES algorithm simply refuses to run</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q12',this,'d',false)"><div class="opt-indicator"></div><div>Nothing &mdash; CTR mode is immune to IV reuse</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q12',this,'d',false)"><div class="opt-indicator"></div><div>XOR-ing the two ciphertexts cancels the shared keystream, leaking X&#8853;Y</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q12','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q12','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q12', `Recall the classic "two-time pad" problem: C1 &oplus; C2 = X1 &oplus; X2.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q12', `The pseudorandom keystream R is identical both times, so C1&#8853;C2 = (X&#8853;R)&#8853;(Y&#8853;R) = X&#8853;Y &mdash; a serious leak. This is the real-world flaw behind CVE-2020-1472 (ZeroLogon's static AES-CFB8 IV) and the BEAST attack on TLS.`)">Show Answer</button>
         </div>
@@ -465,13 +465,13 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       </div>
       <div class="q-body">
         <div class="mcq-options" id="q13-opts">
-          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>The full 2&sup1;&sup2;&#8312; AES keyspace</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>The much smaller password-guessing space</div></div>
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>The much smaller password-guessing space</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>The full 2&sup1;&sup2;&#8312; AES keyspace</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q13',this,'c',false)"><div class="opt-indicator"></div><div>The SHA3 output size (256+ bits)</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q13',this,'d',false)"><div class="opt-indicator"></div><div>It cannot be attacked at all</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q13','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q13','a')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q13', `WikiLeaks reportedly decrypted a ciphertext exactly this way.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q13', `The effective security collapses to the size of the guessable password space, not AES's full key space &mdash; the classic "weak password" pitfall.`)">Show Answer</button>
         </div>
@@ -486,13 +486,13 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       </div>
       <div class="q-body">
         <div class="mcq-options" id="q14-opts">
-          <div class="mcq-opt" data-val="a" onclick="selectOpt('q14',this,'a',false)"><div class="opt-indicator"></div><div>Both were open-source from day one</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q14',this,'b',false)"><div class="opt-indicator"></div><div>Their secret algorithms were eventually leaked or reverse-engineered, exposing real weaknesses</div></div>
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q14',this,'a',false)"><div class="opt-indicator"></div><div>Their secret algorithms were eventually leaked or reverse-engineered, exposing real weaknesses</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q14',this,'b',false)"><div class="opt-indicator"></div><div>Both were open-source from day one</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q14',this,'c',false)"><div class="opt-indicator"></div><div>Both used quantum-resistant algorithms</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q14',this,'d',false)"><div class="opt-indicator"></div><div>Neither was ever deployed in production</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q14','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q14','a')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q14', `RC4's algorithm leaked via an anonymous mailing-list post in 1994; MIFARE Classic was reverse-engineered in 2007.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q14', `RC4 (a trade secret since 1987) leaked in 1994; MIFARE Classic (using only 48-bit keys) was reverse-engineered in 2007. Hiding an algorithm doesn't make it secure.`)">Show Answer</button>
         </div>
@@ -508,12 +508,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q15-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q15',this,'a',false)"><div class="opt-indicator"></div><div>Exploits a mathematical weakness in the cipher's core algorithm</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>Uses information (often physical &mdash; power, timing, sound) outside the cipher's abstract security model</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>Requires directly breaking AES</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Only works against quantum computers</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Requires directly breaking AES</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Uses information (often physical &mdash; power, timing, sound) outside the cipher's abstract security model</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q15','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q15','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q15', `Think about measuring a smartcard's power draw while it computes.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q15', `Side-channel attacks use out-of-model information &mdash; power consumption, timing, sound, electromagnetic emissions, cache behaviour &mdash; rather than breaking the cipher's maths.`)">Show Answer</button>
         </div>
@@ -585,12 +585,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q18-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q18',this,'a',false)"><div class="opt-indicator"></div><div>Quantum computers</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q18',this,'b',false)"><div class="opt-indicator"></div><div>A dedicated brute-force machine cracking a key in about 56 hours</div></div>
-          <div class="mcq-opt" data-val="c" onclick="selectOpt('q18',this,'c',false)"><div class="opt-indicator"></div><div>A side-channel power-analysis attack</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q18',this,'b',false)"><div class="opt-indicator"></div><div>A side-channel power-analysis attack</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q18',this,'c',false)"><div class="opt-indicator"></div><div>A dedicated brute-force machine cracking a key in about 56 hours</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q18',this,'d',false)"><div class="opt-indicator"></div><div>Reverse-engineering the algorithm</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q18','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q18','c')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q18', `Pure brute force, once specialised hardware caught up.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q18', `In 1998 a specialised machine brute-forced a DES key in roughly 56 hours, proving 56 bits was too short for the hardware of the day.`)">Show Answer</button>
         </div>
@@ -627,12 +627,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q20-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q20',this,'a',false)"><div class="opt-indicator"></div><div>Keyboard layout alone</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>Rotors and plugboard settings</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>Power cable</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q20',this,'c',false)"><div class="opt-indicator"></div><div>Lampboard bulbs</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>Power cable</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>Rotors and plugboard settings</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q20','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q20','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q20', `Two separate mechanical components each held part of the key.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q20', `The rotors and the plugboard together formed Enigma's secret key setup; the Bombe (built at Bletchley Park) helped break it.`)">Show Answer</button>
         </div>
@@ -648,12 +648,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q21-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q21',this,'a',false)"><div class="opt-indicator"></div><div>56 bits</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q21',this,'b',false)"><div class="opt-indicator"></div><div>112 bits</div></div>
-          <div class="mcq-opt" data-val="c" onclick="selectOpt('q21',this,'c',false)"><div class="opt-indicator"></div><div>168 bits</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q21',this,'b',false)"><div class="opt-indicator"></div><div>168 bits</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q21',this,'c',false)"><div class="opt-indicator"></div><div>112 bits</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q21',this,'d',false)"><div class="opt-indicator"></div><div>256 bits</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q21','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q21','c')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q21', `"Triple" does not literally mean 3&times;56 bits of security.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q21', `Triple DES effectively provides about 112 bits of security (not the naive 168), due to a meet-in-the-middle attack.`)">Show Answer</button>
         </div>
