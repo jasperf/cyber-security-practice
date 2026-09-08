@@ -353,12 +353,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q9-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q9',this,'a',false)"><div class="opt-indicator"></div><div>Encrypting packets end-to-end</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q9',this,'b',false)"><div class="opt-indicator"></div><div>Rewriting IP address information in packet headers as they cross a routing device</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q9',this,'b',false)"><div class="opt-indicator"></div><div>Splitting large packets into fragments</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q9',this,'c',false)"><div class="opt-indicator"></div><div>Resolving domain names to IP addresses</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q9',this,'d',false)"><div class="opt-indicator"></div><div>Splitting large packets into fragments</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q9',this,'d',false)"><div class="opt-indicator"></div><div>Rewriting IP address information in packet headers as they cross a routing device</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q9','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q9','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q9', `It's how many private-IP devices can share one public IP.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q9', `NAT maps one IP address space into another by modifying header info in transit, letting private addresses share a public one.`)">Show Answer</button>
         </div>
@@ -375,11 +375,11 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
         <div class="mcq-options" id="q10-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q10',this,'a',false)"><div class="opt-indicator"></div><div>64</div></div>
           <div class="mcq-opt" data-val="b" onclick="selectOpt('q10',this,'b',false)"><div class="opt-indicator"></div><div>96</div></div>
-          <div class="mcq-opt" data-val="c" onclick="selectOpt('q10',this,'c',false)"><div class="opt-indicator"></div><div>128</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q10',this,'d',false)"><div class="opt-indicator"></div><div>256</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q10',this,'c',false)"><div class="opt-indicator"></div><div>256</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q10',this,'d',false)"><div class="opt-indicator"></div><div>128</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q10','c')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q10','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q10', `It's exactly 4&times; IPv4's address size.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q10', `IPv6 addresses are 128 bits (2&#185;&#178;&#8312; &asymp; 3.4&times;10&sup3;&#8312; addresses) &mdash; vastly more than IPv4 needs to run out of.`)">Show Answer</button>
         </div>
@@ -407,13 +407,13 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       </div>
       <div class="q-body">
         <div class="mcq-options" id="q11-opts">
-          <div class="mcq-opt" data-val="a" onclick="selectOpt('q11',this,'a',false)"><div class="opt-indicator"></div><div>UDP</div></div>
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q11',this,'a',false)"><div class="opt-indicator"></div><div>TCP</div></div>
           <div class="mcq-opt" data-val="b" onclick="selectOpt('q11',this,'b',false)"><div class="opt-indicator"></div><div>IP</div></div>
-          <div class="mcq-opt" data-val="c" onclick="selectOpt('q11',this,'c',false)"><div class="opt-indicator"></div><div>TCP</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q11',this,'c',false)"><div class="opt-indicator"></div><div>UDP</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q11',this,'d',false)"><div class="opt-indicator"></div><div>ARP</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q11','c')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q11','a')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q11', `The one requiring SYN, SYN-ACK, ACK.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q11', `TCP &mdash; reliable, ordered, connection-oriented, using sequence numbers/acknowledgments and a 3-way handshake.`)">Show Answer</button>
         </div>
@@ -449,13 +449,13 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       </div>
       <div class="q-body">
         <div class="mcq-options" id="q13-opts">
-          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>Reliable, ordered, connection-oriented</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>Simple, lightweight, "unreliable" message delivery with no handshake</div></div>
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q13',this,'a',false)"><div class="opt-indicator"></div><div>Simple, lightweight, "unreliable" message delivery with no handshake</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q13',this,'b',false)"><div class="opt-indicator"></div><div>Reliable, ordered, connection-oriented</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q13',this,'c',false)"><div class="opt-indicator"></div><div>Used exclusively for HTTP traffic</div></div>
           <div class="mcq-opt" data-val="d" onclick="selectOpt('q13',this,'d',false)"><div class="opt-indicator"></div><div>A routing protocol</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q13','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q13','a')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q13', `No 3-way handshake, no guaranteed delivery.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q13', `UDP is a lightweight, stateless datagram protocol with no reliability, ordering, or connection setup &mdash; trading guarantees for speed.`)">Show Answer</button>
         </div>
@@ -506,11 +506,11 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
         <div class="mcq-options" id="q15-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q15',this,'a',false)"><div class="opt-indicator"></div><div>Well Known Ports</div></div>
           <div class="mcq-opt" data-val="b" onclick="selectOpt('q15',this,'b',false)"><div class="opt-indicator"></div><div>Registered Ports</div></div>
-          <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Dynamic / Private (Ephemeral) Ports</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Reserved Ports</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q15',this,'c',false)"><div class="opt-indicator"></div><div>Reserved Ports</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q15',this,'d',false)"><div class="opt-indicator"></div><div>Dynamic / Private (Ephemeral) Ports</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q15','c')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q15','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q15', `Assigned on-the-fly to outgoing client connections.`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q15', `Dynamic or Private (Ephemeral) Ports &mdash; usually assigned automatically to client-initiated connections.`)">Show Answer</button>
         </div>
@@ -623,12 +623,12 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
       <div class="q-body">
         <div class="mcq-options" id="q20-opts">
           <div class="mcq-opt" data-val="a" onclick="selectOpt('q20',this,'a',false)"><div class="opt-indicator"></div><div>ping</div></div>
-          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>netstat</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q20',this,'b',false)"><div class="opt-indicator"></div><div>hostname</div></div>
           <div class="mcq-opt" data-val="c" onclick="selectOpt('q20',this,'c',false)"><div class="opt-indicator"></div><div>traceroute</div></div>
-          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>hostname</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q20',this,'d',false)"><div class="opt-indicator"></div><div>netstat</div></div>
         </div>
         <div class="q-actions">
-          <button class="btn btn-check" onclick="checkMCQ('q20','b')">Check</button>
+          <button class="btn btn-check" onclick="checkMCQ('q20','d')">Check</button>
           <button class="btn btn-hint" onclick="showHint('q20', `Think "network statistics".`)">Hint</button>
           <button class="btn btn-reveal" onclick="revealAnswer('q20', `netstat.`)">Show Answer</button>
         </div>
