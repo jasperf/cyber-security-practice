@@ -70,14 +70,20 @@ npx serve .
 
 ## Generating PDFs
 
-The printable `.md` worksheets can be turned into a PDF locally with [pandoc](https://pandoc.org/) — no PDFs are committed to the repo (see `.gitignore`), so generate one whenever you need it:
+The printable `.md` worksheets can be turned into PDFs locally with [pandoc](https://pandoc.org/) — no PDFs are committed to the repo (see `.gitignore`), so generate them whenever you need them:
 
 ```bash
+# Convert all sessions at once
+./convert-to-pdf.sh
+
+# Or convert a single file
 pandoc -f gfm s1-cryptography/session1-cryptography.md -o session1-cryptography.pdf \
   --pdf-engine=xelatex -V geometry:margin=2.2cm -V fontsize=11pt -V colorlinks=true
 ```
 
-`-f gfm` matters: these sheets write MCQ options as a `-` list directly under the question line with no blank line before it (as GitHub renders it). Pandoc's default markdown reader needs that blank line to start a list, so without `-f gfm` the options collapse into run-on paragraph text instead of bullets. Requires `pandoc` and a LaTeX engine (`xelatex`, from a TeX distribution like MacTeX/TeX Live) installed locally.
+`-f gfm` matters: these sheets write MCQ options as a `-` list directly under the question line with no blank line before it (as GitHub renders it). Pandoc's default markdown reader needs that blank line to start a list, so without `-f gfm` the options collapse into run-on paragraph text instead of proper bullet points. Requires `pandoc` and a LaTeX engine (`xelatex`, from a TeX distribution like MacTeX/TeX Live) installed locally.
+
+The `convert-to-pdf.sh` script outputs all session PDFs to `material/paper-based-tests/`.
 
 ## Sessions Covered
 
