@@ -1,7 +1,7 @@
 # Session 2 · Networking Fundamentals
 
 **Personal Study Notes · Printable Worksheet**
-**21 questions · 22 marks**
+**26 questions · 28 marks**
 
 This document contains all questions from the interactive sheet in a printable format. Write your answers directly in your notebook, then self-check afterwards using the interactive `.html` version.
 
@@ -156,3 +156,46 @@ Which of these is a _network scanning_ tool for discovering live hosts, open por
 - B) Ettercap
 - C) Nmap
 - D) tcpdump
+
+---
+
+## Section B: Devices, VPN & Emerging Tech
+
+**Key ideas:** Beyond the core protocol stack, physical **network devices** map onto specific OSI layers, each interface has a burned-in **MAC address**, a **VPN** builds an encrypted tunnel over untrusted networks, networking **tools** split into scanners (find hosts/services) vs. sniffers (capture traffic), and newer trends like **SDN**, **IoT**, and **5G/6G** are reshaping network design.
+
+### Questions
+
+**Q22** (1 mark)
+Which network device operates primarily at Layer 2 (Data Link), forwarding frames using MAC addresses rather than IP addresses?
+- A) Router
+- B) Gateway
+- C) Switch
+- D) Modem
+
+**Q23** (1 mark)
+How is a MAC (Media Access Control) address structured?
+- A) 128 bits, split into a 64-bit network prefix and 64-bit interface ID
+- B) 32 bits, split into a network identifier and host identifier via a subnet mask
+- C) 16 bits, assigned dynamically by DHCP
+- D) 48 bits: a 3-octet Organisationally Unique Identifier (OUI) plus a 3-octet NIC-specific portion
+
+**Q24** (1 mark)
+What is the primary purpose of a VPN (Virtual Private Network)?
+- A) To create an encrypted, secure tunnel for network activity, especially over public/untrusted networks
+- B) To translate private IP addresses into a single public IP address
+- C) To resolve domain names into IP addresses
+- D) To automatically assign IP addresses to new devices on a LAN
+
+**Q25** (1 mark)
+Which pairing correctly groups networking tools by primary purpose?
+- A) Wireshark & Nmap — network scanning; Metasploit & Ettercap — packet sniffing
+- B) Nmap & Metasploit (plus NetScanTools Pro) — network scanning; Wireshark & Ettercap — packet sniffing
+- C) Ettercap & Metasploit — network scanning; Nmap & Wireshark — packet sniffing
+- D) Nmap & Wireshark — network scanning; Metasploit & Ettercap — packet sniffing
+
+**Q26** (2 marks)
+Which of these are described as "Emerging Technologies" expanding modern networking? (select all) *(select ALL that apply)*
+- A) Software-Defined Networking (SDN) — software controllers/APIs directing traffic
+- B) IoT (Internet of Things) networking — cars, drones, smart fridges, power meters
+- C) 5G/6G — high-bandwidth cellular networks
+- D) Token Ring — a legacy 1980s LAN access method

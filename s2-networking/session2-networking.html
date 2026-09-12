@@ -132,7 +132,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
   <div style="display:flex;align-items:center;gap:14px;">
     <a href="../index.html" class="back-link">&larr; All sessions</a>
     <div class="timer-wrap"><span style="font-size:0.85rem;">&#9201;</span><div class="timer" id="timer">00:00</div></div>
-    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 22</div></div>
+    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 28</div></div>
   </div>
 </div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
@@ -145,7 +145,8 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="hero-chip">OSI &amp; TCP/IP</div>
     <div class="hero-chip">IP addressing</div>
     <div class="hero-chip">Ports &amp; scanning</div>
-    <div class="hero-chip">21 questions &middot; 22 marks</div>
+    <div class="hero-chip">Devices &amp; VPN</div>
+    <div class="hero-chip">26 questions &middot; 28 marks</div>
   </div>
 </div>
 
@@ -155,6 +156,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
   <a href="#sec-transport" class="sub-tab">TCP, UDP &amp; the Handshake</a>
   <a href="#sec-ports" class="sub-tab">Ports &amp; Scanning</a>
   <a href="#sec-tools" class="sub-tab">Hands-On Networking Tools</a>
+  <a href="#sec-more" class="sub-tab">Devices, VPN &amp; Emerging Tech</a>
 </div>
 
 <div class="main">
@@ -661,6 +663,124 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="section-score-bar"><div class="section-score-fill" id="sec-tools-fill"></div></div>
     <div class="section-score-val" id="sec-tools-val">0/4</div>
   </div>
+  <div class="section-header" id="sec-more">
+    <div class="section-icon">🧩</div>
+    <div>
+      <h2>Devices, VPN &amp; Emerging Tech</h2>
+      <div class="sub-label">5 questions</div>
+    </div>
+  </div>
+  <div class="info-box">Physical <strong>network devices</strong> map onto specific OSI layers, every interface carries a burned-in <strong>MAC address</strong>, a <strong>VPN</strong> builds an encrypted tunnel over untrusted networks, networking <strong>tools</strong> split into scanners vs. sniffers, and trends like <strong>SDN</strong>, <strong>IoT</strong>, and <strong>5G/6G</strong> are reshaping network design.</div>
+    <div class="q-card" id="qcard-q22">
+      <div class="q-header">
+        <div class="q-num">Q22</div>
+        <div class="q-text">Which network device operates primarily at Layer 2 (Data Link), forwarding frames using MAC addresses rather than IP addresses?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q22-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q22',this,'a',false)"><div class="opt-indicator"></div><div>Router</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q22',this,'b',false)"><div class="opt-indicator"></div><div>Gateway</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q22',this,'c',false)"><div class="opt-indicator"></div><div>Switch</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q22',this,'d',false)"><div class="opt-indicator"></div><div>Modem</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q22','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q22', `Routers and gateways sit higher up; a modem is Layer 1.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q22', `A switch operates at Layer 2, forwarding frames using MAC addresses. Routers/Layer 3 switches and gateways work at Layer 3&ndash;4; a modem is a Layer 1 device.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q22-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q23">
+      <div class="q-header">
+        <div class="q-num">Q23</div>
+        <div class="q-text">How is a MAC (Media Access Control) address structured?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q23-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q23',this,'a',false)"><div class="opt-indicator"></div><div>128 bits, split into a 64-bit network prefix and 64-bit interface ID</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q23',this,'b',false)"><div class="opt-indicator"></div><div>32 bits, split into a network identifier and host identifier via a subnet mask</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q23',this,'c',false)"><div class="opt-indicator"></div><div>16 bits, assigned dynamically by DHCP</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q23',this,'d',false)"><div class="opt-indicator"></div><div>48 bits: a 3-octet Organisationally Unique Identifier (OUI) plus a 3-octet NIC-specific portion</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q23','d')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q23', `It's 6 octets total &mdash; half identifies the manufacturer.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q23', `A MAC address is 48 bits (6 octets): the first 3 octets are the Organisationally Unique Identifier (OUI) identifying the manufacturer, the last 3 identify the specific NIC &mdash; hence "burned-in address".`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q23-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q24">
+      <div class="q-header">
+        <div class="q-num">Q24</div>
+        <div class="q-text">What is the primary purpose of a VPN (Virtual Private Network)?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q24-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q24',this,'a',false)"><div class="opt-indicator"></div><div>To create an encrypted, secure tunnel for network activity, especially over public/untrusted networks</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q24',this,'b',false)"><div class="opt-indicator"></div><div>To translate private IP addresses into a single public IP address</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q24',this,'c',false)"><div class="opt-indicator"></div><div>To resolve domain names into IP addresses</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q24',this,'d',false)"><div class="opt-indicator"></div><div>To automatically assign IP addresses to new devices on a LAN</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q24','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q24', `Options B, C, and D describe NAT, DNS, and DHCP respectively.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q24', `A VPN creates an encrypted, secure channel for network activity over public/untrusted networks &mdash; widely used by remote workers. Security concerns include data leakage, weak encryption, trust in the VPN provider, MitM attacks, and performance trade-offs.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q24-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q25">
+      <div class="q-header">
+        <div class="q-num">Q25</div>
+        <div class="q-text">Which pairing correctly groups networking tools by primary purpose?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q25-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q25',this,'a',false)"><div class="opt-indicator"></div><div>Wireshark &amp; Nmap &mdash; network scanning; Metasploit &amp; Ettercap &mdash; packet sniffing</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q25',this,'b',false)"><div class="opt-indicator"></div><div>Nmap &amp; Metasploit (plus NetScanTools Pro) &mdash; network scanning; Wireshark &amp; Ettercap &mdash; packet sniffing</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q25',this,'c',false)"><div class="opt-indicator"></div><div>Ettercap &amp; Metasploit &mdash; network scanning; Nmap &amp; Wireshark &mdash; packet sniffing</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q25',this,'d',false)"><div class="opt-indicator"></div><div>Nmap &amp; Wireshark &mdash; network scanning; Metasploit &amp; Ettercap &mdash; packet sniffing</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q25','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q25', `Scanners discover hosts/ports/services; sniffers capture traffic already flowing.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q25', `Nmap and Metasploit (alongside NetScanTools Pro) scan/discover live hosts, open ports and services. Wireshark and Ettercap are packet sniffers, used to capture and inspect network traffic.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q25-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q26">
+      <div class="q-header">
+        <div class="q-num">Q26</div>
+        <div class="q-text">Which of these are described as "Emerging Technologies" expanding modern networking? (select all)</div>
+        <div class="q-marks">2 marks</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q26-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q26',this,'a',true)"><div class="opt-indicator">A</div><div>Software-Defined Networking (SDN) &mdash; software controllers/APIs directing traffic</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q26',this,'b',true)"><div class="opt-indicator">B</div><div>IoT (Internet of Things) networking &mdash; cars, drones, smart fridges, power meters</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q26',this,'c',true)"><div class="opt-indicator">C</div><div>5G/6G &mdash; high-bandwidth cellular networks</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q26',this,'d',true)"><div class="opt-indicator">D</div><div>Token Ring &mdash; a legacy 1980s LAN access method</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMulti('q26',['a','b','c'])">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q26', `One of these is a legacy technology from the 1980s, not an emerging one.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q26', `SDN, IoT networking, and 5G/6G are all highlighted as emerging technologies reshaping networks. Token Ring is a legacy (largely obsolete) LAN technology from the 1980s.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q26-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Devices, VPN &amp; Emerging Tech score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-more-fill"></div></div>
+    <div class="section-score-val" id="sec-more-val">0/6</div>
+  </div>
 
   <div class="results-panel" id="results-panel">
     <div class="results-grade" id="results-grade">&mdash;</div>
@@ -673,9 +793,9 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 
 const state = { answers: {}, correct: {}, startTime: Date.now() };
 
-const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 2, "q8": 1, "q9": 1, "q10": 1, "q11": 1, "q12": 1, "q13": 1, "q14": 1, "q15": 1, "q16": 1, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1};
+const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 2, "q8": 1, "q9": 1, "q10": 1, "q11": 1, "q12": 1, "q13": 1, "q14": 1, "q15": 1, "q16": 1, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1, "q22": 1, "q23": 1, "q24": 1, "q25": 1, "q26": 2};
 
-const sections = {"osi": {"label": "Communication & the OSI Model", "qs": ["q1", "q2", "q3", "q4"]}, "ip": {"label": "IP Addressing", "qs": ["q5", "q6", "q7", "q8", "q9", "q10"]}, "transport": {"label": "TCP, UDP & the Handshake", "qs": ["q11", "q12", "q13"]}, "ports": {"label": "Ports & Scanning", "qs": ["q14", "q15", "q16", "q17"]}, "tools": {"label": "Hands-On Networking Tools", "qs": ["q18", "q19", "q20", "q21"]}};
+const sections = {"osi": {"label": "Communication & the OSI Model", "qs": ["q1", "q2", "q3", "q4"]}, "ip": {"label": "IP Addressing", "qs": ["q5", "q6", "q7", "q8", "q9", "q10"]}, "transport": {"label": "TCP, UDP & the Handshake", "qs": ["q11", "q12", "q13"]}, "ports": {"label": "Ports & Scanning", "qs": ["q14", "q15", "q16", "q17"]}, "tools": {"label": "Hands-On Networking Tools", "qs": ["q18", "q19", "q20", "q21"]}, "more": {"label": "Devices, VPN & Emerging Tech", "qs": ["q22", "q23", "q24", "q25", "q26"]}};
 
 const allQs = Object.values(sections).flatMap(s => s.qs);
 const maxMarks = allQs.reduce((s,q) => s + marks[q], 0);
