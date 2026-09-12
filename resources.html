@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch &amp; Learn &middot; Free Videos for Cyber Security Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=Literata:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117; --surface: #181c27; --surface2: #1e2336; --border: #2a3050;
+  --crypto: #a370f7; --net: #4f8ef7; --red: #f5594f; --forensics: #29c5c9; --misc: #3ecf8e; --lab: #f5a623;
+  --text: #e8eaf0; --text-muted: #7a84a0; --text-dim: #4a5270;
+  --font-display: 'Fraunces', Georgia, serif; --font-body: 'Literata', Georgia, serif; --font-mono: 'DM Mono', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; padding-bottom: 80px; line-height: 1.7; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; opacity: 0.5; }
+nav { position: sticky; top: 0; z-index: 100; background: rgba(15,17,23,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 32px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; row-gap: 6px; }
+.nav-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--text); }
+.nav-logo span { color: var(--net); }
+.nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+.nav-links a { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.5px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+.hero { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 56px 32px 28px; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; }
+h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 18px; }
+h1 em { font-style: italic; color: var(--net); }
+.hero-sub { color: var(--text-muted); font-size: 1.02rem; max-width: 600px; line-height: 1.7; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+.legend span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.badge { font-family: var(--font-mono); font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.5px; }
+.badge.free { background: rgba(62,207,142,0.12); color: var(--misc); border: 1px solid rgba(62,207,142,0.3); }
+.wrap { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 32px; }
+.topic { margin-top: 40px; }
+.topic-head { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.topic-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.topic.crypto .topic-icon     { background: rgba(163,112,247,0.12); }
+.topic.net .topic-icon        { background: rgba(79,142,247,0.12); }
+.topic.red .topic-icon        { background: rgba(245,89,79,0.12); }
+.topic.forensics .topic-icon  { background: rgba(41,197,201,0.12); }
+.topic.misc .topic-icon       { background: rgba(62,207,142,0.12); }
+.topic-head h2 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; letter-spacing: -0.3px; }
+.topic-head .sub { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-dim); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+.topic.crypto .drill    { color: var(--crypto); border-color: rgba(163,112,247,0.3); }
+.topic.crypto .drill:hover { background: rgba(163,112,247,0.08); }
+.topic.net .drill       { color: var(--net); border-color: rgba(79,142,247,0.3); }
+.topic.net .drill:hover { background: rgba(79,142,247,0.08); }
+.topic.red .drill       { color: var(--red); border-color: rgba(245,89,79,0.3); }
+.topic.red .drill:hover { background: rgba(245,89,79,0.08); }
+.topic.forensics .drill { color: var(--forensics); border-color: rgba(41,197,201,0.3); }
+.topic.forensics .drill:hover { background: rgba(41,197,201,0.08); }
+.topic.misc .drill      { color: var(--misc); border-color: rgba(62,207,142,0.3); }
+.topic.misc .drill:hover { background: rgba(62,207,142,0.08); }
+.topic-head .drill { margin-left: auto; font-family: var(--font-mono); font-size: 0.7rem; text-decoration: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; white-space: nowrap; transition: background 0.2s; }
+.res-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.res-list li { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; display: flex; align-items: flex-start; gap: 12px; transition: border-color 0.2s; }
+.res-list li:hover { border-color: #3a4070; }
+.res-emoji { font-size: 1.05rem; flex-shrink: 0; margin-top: 2px; }
+.res-body { flex: 1; }
+.res-body a { color: var(--text); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+.res-body a:hover { color: var(--net); text-decoration: underline; }
+.res-body .desc { color: var(--text-muted); font-size: 0.84rem; margin-top: 2px; }
+.empty-note { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-dim); margin-top: 14px; padding: 10px 0; }
+.note { background: var(--surface2); border-left: 3px solid var(--lab); border-radius: 0 6px 6px 0; padding: 14px 18px; margin-top: 28px; font-size: 0.9rem; color: var(--text-muted); }
+footer { position: relative; z-index: 1; max-width: 860px; margin: 56px auto 0; padding: 24px 32px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+footer p { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); }
+footer a { color: var(--text-muted); text-decoration: none; }
+footer a:hover { color: var(--text); }
+@media (max-width:600px){ .topic-head .drill { display:none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Cyber<span>Sec</span> Practice</div>
+  <div class="nav-links">
+    <a href="index.html">&larr; All sessions</a>
+    <a href="#net">Topics</a>
+    <a href="https://github.com/jasperf/cyber-security-practice" target="_blank">GitHub &#8599;</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">Companion Viewing &middot; Session Videos</div>
+  <h1>Watch &amp; <em>Learn</em></h1>
+  <p class="hero-sub">Free videos to watch alongside each session's exercise sheet &mdash; watch a clip when a topic feels hard, then go back and drill it on the matching sheet until you can answer from memory.</p>
+  <div class="legend">
+    <span><span class="badge free">FREE</span> No account needed</span>
+    <span>📺 Video series &nbsp; 🎬 Documentary</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- CRYPTOGRAPHY -->
+  <div class="topic crypto" id="crypto">
+    <div class="topic-head">
+      <div class="topic-icon">🔑</div>
+      <div><div class="sub">Session 1</div><h2>Cryptography</h2></div>
+      <a class="drill" href="s1-cryptography/session1-cryptography.html">Drill this &rarr;</a>
+    </div>
+    <div class="empty-note">No videos curated here yet &mdash; suggestions welcome via a PR.</div>
+  </div>
+
+  <!-- NETWORKING -->
+  <div class="topic net" id="net">
+    <div class="topic-head">
+      <div class="topic-icon">🌐</div>
+      <div><div class="sub">Session 2</div><h2>Networking Fundamentals</h2></div>
+      <a class="drill" href="s2-networking/session2-networking.html">Drill this &rarr;</a>
+    </div>
+    <ul class="res-list">
+      <li><span class="res-emoji">📺</span><div class="res-body"><a href="https://www.youtube.com/watch?v=S7MNX_UD7vY&amp;list=PLIhvC56v63IJVXv0GJcl9vO5Z6znCVb1P" target="_blank" rel="noopener">NetworkChuck &mdash; Free CCNA Course <span class="badge free">FREE</span></a><div class="desc">Full CCNA-syllabus playlist covering the OSI model, TCP/IP, IP addressing/subnetting, routing, switching and more &mdash; goes well beyond this session, but is the natural next step once you're scoring well on the sheet.</div></div></li>
+    </ul>
+  </div>
+
+  <!-- RED TEAMING -->
+  <div class="topic red" id="red">
+    <div class="topic-head">
+      <div class="topic-icon">🎯</div>
+      <div><div class="sub">Session 3</div><h2>Red Teaming</h2></div>
+      <a class="drill" href="s3-red-teaming/session3-red-teaming.html">Drill this &rarr;</a>
+    </div>
+    <div class="empty-note">No videos curated here yet &mdash; suggestions welcome via a PR.</div>
+  </div>
+
+  <!-- DIGITAL FORENSICS -->
+  <div class="topic forensics" id="forensics">
+    <div class="topic-head">
+      <div class="topic-icon">🔍</div>
+      <div><div class="sub">Session 4</div><h2>Digital Forensics</h2></div>
+      <a class="drill" href="s4-forensics/session4-forensics.html">Drill this &rarr;</a>
+    </div>
+    <div class="empty-note">No videos curated here yet &mdash; suggestions welcome via a PR.</div>
+  </div>
+
+  <!-- MISC CTF -->
+  <div class="topic misc" id="misc">
+    <div class="topic-head">
+      <div class="topic-icon">🧩</div>
+      <div><div class="sub">Session 5</div><h2>Miscellaneous CTF Challenges</h2></div>
+      <a class="drill" href="s5-misc-ctf/session5-misc-ctf.html">Drill this &rarr;</a>
+    </div>
+    <div class="empty-note">No videos curated here yet &mdash; suggestions welcome via a PR.</div>
+  </div>
+
+  <div class="note">
+    <strong>Note:</strong> only publicly viewable, freely accessible videos are listed here. Course-specific or delisted/LMS-only material is intentionally kept off this public page.
+  </div>
+
+</div>
+
+<footer>
+  <p>Independent personal study notes for exam prep, testing general cyber security concepts in my own words. Not affiliated with or endorsed by any course, instructor, or organization, or by the linked video creators.</p>
+  <p><a href="https://github.com/jasperf/cyber-security-practice" target="_blank">View on GitHub &#8599;</a></p>
+</footer>
+
+</body>
+</html>

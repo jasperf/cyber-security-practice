@@ -20,11 +20,12 @@ Each session sheet is a single self-contained HTML file with:
 ```
 cyber-security-practice/
 ├── index.html                        ← Home page / session index
+├── resources.html                    ← Companion videos per session (Resources link in nav)
 ├── s1-cryptography/
 │   ├── session1-cryptography.html    ← Interactive (21 q · 24 marks)
 │   └── session1-cryptography.md      ← Printable, same questions
 ├── s2-networking/
-│   ├── session2-networking.html      ← Interactive (21 q · 22 marks)
+│   ├── session2-networking.html      ← Interactive (26 q · 28 marks)
 │   └── session2-networking.md        ← Printable
 ├── s3-red-teaming/
 │   ├── session3-red-teaming.html     ← Interactive (20 q · 21 marks)
@@ -44,6 +45,10 @@ cyber-security-practice/
 Alongside each interactive HTML sheet, a **printable markdown worksheet** is available for offline/classroom use — same basename, `.md` instead of `.html`, in the same session folder. They contain the exact same questions, formatted for printing or copying into a notebook.
 
 Use the printable versions for **written practice** and the interactive versions for **self-assessment with hints and instant feedback**.
+
+## Companion Videos
+
+[`resources.html`](./resources.html) (linked from the "Resources" nav item on the home page) lists free, publicly viewable videos to watch alongside each session — e.g. NetworkChuck's free CCNA course for Session 2 Networking. Only openly accessible material is listed there; course-specific or delisted/LMS-only videos are deliberately kept off this public page.
 
 ## Adding a New Sheet
 
