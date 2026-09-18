@@ -22,7 +22,7 @@ cyber-security-practice/
 ├── index.html                        ← Home page / session index
 ├── resources.html                    ← Companion videos per session (Resources link in nav)
 ├── s1-cryptography/
-│   ├── session1-cryptography.html    ← Interactive (21 q · 24 marks)
+│   ├── session1-cryptography.html    ← Interactive (25 q · 28 marks)
 │   └── session1-cryptography.md      ← Printable, same questions
 ├── s2-networking/
 │   ├── session2-networking.html      ← Interactive (26 q · 28 marks)

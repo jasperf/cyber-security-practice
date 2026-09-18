@@ -132,7 +132,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
   <div style="display:flex;align-items:center;gap:14px;">
     <a href="../index.html" class="back-link">&larr; All sessions</a>
     <div class="timer-wrap"><span style="font-size:0.85rem;">&#9201;</span><div class="timer" id="timer">00:00</div></div>
-    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 24</div></div>
+    <div class="score-pill"><div class="score-label">Score</div><div class="score-val" id="global-score">0 / 28</div></div>
   </div>
 </div>
 <div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
@@ -145,7 +145,8 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="hero-chip">Cryptology basics</div>
     <div class="hero-chip">Classical &amp; modern ciphers</div>
     <div class="hero-chip">Real-world pitfalls</div>
-    <div class="hero-chip">21 questions &middot; 24 marks</div>
+    <div class="hero-chip">Symmetric vs asymmetric</div>
+    <div class="hero-chip">25 questions &middot; 28 marks</div>
   </div>
 </div>
 
@@ -155,6 +156,7 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
   <a href="#sec-modern" class="sub-tab">Modern Ciphers &amp; Modes</a>
   <a href="#sec-pitfalls" class="sub-tab">Pitfalls &amp; Side Channels</a>
   <a href="#sec-history" class="sub-tab">History &amp; Real-World Failures</a>
+  <a href="#sec-keys" class="sub-tab">Symmetric vs Asymmetric</a>
 </div>
 
 <div class="main">
@@ -666,6 +668,104 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     <div class="section-score-val" id="sec-history-val">0/4</div>
   </div>
 
+  <div class="section-header" id="sec-keys">
+    <div class="section-icon">🗝️</div>
+    <div>
+      <h2>Symmetric vs Asymmetric Keys</h2>
+      <div class="sub-label">4 questions</div>
+    </div>
+  </div>
+  <div class="info-box"><strong>Symmetric</strong> crypto uses one shared secret key to both encrypt and decrypt &mdash; fast, but both sides must somehow get that key safely first. <strong>Asymmetric</strong> (public-key) crypto uses a matched <strong>key pair</strong>: a <strong>public key</strong> anyone may have, which only locks (or verifies signatures), and a <strong>private key</strong> that never leaves its owner, which unlocks (or signs). It is much slower, so real protocols like TLS and SSH are <em>hybrid</em>: asymmetric crypto sets up a shared key, then symmetric crypto (AES, ChaCha20) protects the data.</div>
+    <div class="q-card" id="qcard-q22">
+      <div class="q-header">
+        <div class="q-num">Q22</div>
+        <div class="q-text">In asymmetric (public-key) cryptography, a message encrypted with Bob's <em>public</em> key can be decrypted by:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q22-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q22',this,'a',false)"><div class="opt-indicator"></div><div>Anyone who has Bob's public key</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q22',this,'b',false)"><div class="opt-indicator"></div><div>Only Bob, using his matching private key</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q22',this,'c',false)"><div class="opt-indicator"></div><div>Anyone who knows which algorithm was used</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q22',this,'d',false)"><div class="opt-indicator"></div><div>Eve, by XOR-ing the ciphertext with the public key</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q22','b')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q22', `The two keys are a matched pair &mdash; one locks, only the other unlocks.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q22', `Only the holder of the matching private key (Bob) can decrypt. The public key can be handed to anyone because it can only <em>lock</em>, like an open padlock anyone can snap shut.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q22-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q23">
+      <div class="q-header">
+        <div class="q-num">Q23</div>
+        <div class="q-text">Every cipher covered earlier in this session (the substitution cipher, Enigma, DES, Triple DES, RC4, AES) is:</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q23-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q23',this,'a',false)"><div class="opt-indicator"></div><div>Asymmetric &mdash; each uses a public/private key pair</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q23',this,'b',false)"><div class="opt-indicator"></div><div>A hash function, not a cipher</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q23',this,'c',false)"><div class="opt-indicator"></div><div>A mix: the classical ones are symmetric, the modern ones asymmetric</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q23',this,'d',false)"><div class="opt-indicator"></div><div>Symmetric &mdash; the same secret key encrypts and decrypts</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q23','d')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q23', `Did Alice and Bob need to share the same secret beforehand in all of them?`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q23', `They are all symmetric: sender and receiver share one secret key. Asymmetric examples are RSA, Diffie-Hellman and elliptic-curve schemes (ECDH, Ed25519).`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q23-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q24">
+      <div class="q-header">
+        <div class="q-num">Q24</div>
+        <div class="q-text">Why does HTTPS/TLS use <em>both</em> asymmetric and symmetric cryptography?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q24-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q24',this,'a',false)"><div class="opt-indicator"></div><div>Asymmetric crypto safely agrees on a shared session key; fast symmetric crypto (e.g. AES) then encrypts the actual data</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q24',this,'b',false)"><div class="opt-indicator"></div><div>Symmetric crypto exchanges the keys; asymmetric crypto encrypts the bulk data because it is faster</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q24',this,'c',false)"><div class="opt-indicator"></div><div>For redundancy &mdash; if one breaks, the other still protects the data</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q24',this,'d',false)"><div class="opt-indicator"></div><div>Browsers cannot run AES without a public key</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q24','a')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q24', `Symmetric is fast but has a key-sharing problem; asymmetric solves that problem but is slow.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q24', `Asymmetric crypto (e.g. ECDHE key exchange, certificate signatures) solves the key-distribution problem, but it is slow &mdash; so it is only used to set up a shared session key. The bulk data is then encrypted with fast symmetric AES or ChaCha20. This is called <em>hybrid</em> encryption.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q24-fb"></div>
+      </div>
+    </div>
+    <div class="q-card" id="qcard-q25">
+      <div class="q-header">
+        <div class="q-num">Q25</div>
+        <div class="q-text">When you log in to a server with an SSH key pair, which file must <em>never</em> leave your own machine?</div>
+        <div class="q-marks">1 mark</div>
+      </div>
+      <div class="q-body">
+        <div class="mcq-options" id="q25-opts">
+          <div class="mcq-opt" data-val="a" onclick="selectOpt('q25',this,'a',false)"><div class="opt-indicator"></div><div>Your public key (<code>id_ed25519.pub</code>)</div></div>
+          <div class="mcq-opt" data-val="b" onclick="selectOpt('q25',this,'b',false)"><div class="opt-indicator"></div><div>The server's <code>authorized_keys</code> file</div></div>
+          <div class="mcq-opt" data-val="c" onclick="selectOpt('q25',this,'c',false)"><div class="opt-indicator"></div><div>Your private key (<code>id_ed25519</code>)</div></div>
+          <div class="mcq-opt" data-val="d" onclick="selectOpt('q25',this,'d',false)"><div class="opt-indicator"></div><div>The <code>known_hosts</code> file</div></div>
+        </div>
+        <div class="q-actions">
+          <button class="btn btn-check" onclick="checkMCQ('q25','c')">Check</button>
+          <button class="btn btn-hint" onclick="showHint('q25', `One half of the pair is meant to be copied onto servers; the other proves who you are.`)">Hint</button>
+          <button class="btn btn-reveal" onclick="revealAnswer('q25', `Your private key stays with you. The public key is copied to the server's <code>~/.ssh/authorized_keys</code>; at login the server sends a challenge only your private key can sign, and verifies the signature with your public key. After that, SSH agrees a symmetric session key for the rest of the connection.`)">Show Answer</button>
+        </div>
+        <div class="feedback" id="q25-fb"></div>
+      </div>
+    </div>
+  <div class="section-score">
+    <div class="section-score-label">Symmetric vs Asymmetric Keys score</div>
+    <div class="section-score-bar"><div class="section-score-fill" id="sec-keys-fill"></div></div>
+    <div class="section-score-val" id="sec-keys-val">0/4</div>
+  </div>
+
   <div class="results-panel" id="results-panel">
     <div class="results-grade" id="results-grade">&mdash;</div>
     <div class="results-label" id="results-label">Complete all questions to see your final score</div>
@@ -677,9 +777,9 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 
 const state = { answers: {}, correct: {}, startTime: Date.now() };
 
-const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 1, "q8": 1, "q9": 2, "q10": 1, "q11": 1, "q12": 2, "q13": 1, "q14": 1, "q15": 1, "q16": 2, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1};
+const marks = {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 1, "q6": 1, "q7": 1, "q8": 1, "q9": 2, "q10": 1, "q11": 1, "q12": 2, "q13": 1, "q14": 1, "q15": 1, "q16": 2, "q17": 1, "q18": 1, "q19": 1, "q20": 1, "q21": 1, "q22": 1, "q23": 1, "q24": 1, "q25": 1};
 
-const sections = {"core": {"label": "Core Concepts", "qs": ["q1", "q2", "q3", "q4", "q5"]}, "classical": {"label": "Classical Ciphers & Attacks", "qs": ["q6", "q7", "q8"]}, "modern": {"label": "Modern Ciphers & Modes", "qs": ["q9", "q10", "q11", "q12"]}, "pitfalls": {"label": "Pitfalls & Side Channels", "qs": ["q13", "q14", "q15", "q16", "q17"]}, "history": {"label": "History & Real-World Failures", "qs": ["q18", "q19", "q20", "q21"]}};
+const sections = {"core": {"label": "Core Concepts", "qs": ["q1", "q2", "q3", "q4", "q5"]}, "classical": {"label": "Classical Ciphers & Attacks", "qs": ["q6", "q7", "q8"]}, "modern": {"label": "Modern Ciphers & Modes", "qs": ["q9", "q10", "q11", "q12"]}, "pitfalls": {"label": "Pitfalls & Side Channels", "qs": ["q13", "q14", "q15", "q16", "q17"]}, "history": {"label": "History & Real-World Failures", "qs": ["q18", "q19", "q20", "q21"]}, "keys": {"label": "Symmetric vs Asymmetric Keys", "qs": ["q22", "q23", "q24", "q25"]}};
 
 const allQs = Object.values(sections).flatMap(s => s.qs);
 const maxMarks = allQs.reduce((s,q) => s + marks[q], 0);

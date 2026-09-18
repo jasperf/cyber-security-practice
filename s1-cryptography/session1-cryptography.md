@@ -1,7 +1,7 @@
 # Session 1 · Cryptography
 
 **Personal Study Notes · Printable Worksheet**
-**21 questions · 24 marks**
+**25 questions · 28 marks**
 
 This document contains all questions from the interactive sheet in a printable format. Write your answers directly in your notebook, then self-check afterwards using the interactive `.html` version.
 
@@ -160,3 +160,39 @@ Triple DES is still in limited use today with an effective key strength of about
 - B) 168 bits
 - C) 112 bits
 - D) 256 bits
+
+---
+
+## Section B: Symmetric vs Asymmetric Keys
+
+**Key ideas:** **Symmetric** crypto uses one shared secret key to both encrypt and decrypt — fast, but both sides must somehow get that key safely first. **Asymmetric** (public-key) crypto uses a matched **key pair**: a **public key** anyone may have, which only locks (or verifies signatures), and a **private key** that never leaves its owner, which unlocks (or signs). It is much slower, so real protocols like TLS and SSH are _hybrid_: asymmetric crypto sets up a shared key, then symmetric crypto (AES, ChaCha20) protects the data.
+
+### Questions
+
+**Q22** (1 mark)
+In asymmetric (public-key) cryptography, a message encrypted with Bob's _public_ key can be decrypted by:
+- A) Anyone who has Bob's public key
+- B) Only Bob, using his matching private key
+- C) Anyone who knows which algorithm was used
+- D) Eve, by XOR-ing the ciphertext with the public key
+
+**Q23** (1 mark)
+Every cipher covered earlier in this session (the substitution cipher, Enigma, DES, Triple DES, RC4, AES) is:
+- A) Asymmetric — each uses a public/private key pair
+- B) A hash function, not a cipher
+- C) A mix: the classical ones are symmetric, the modern ones asymmetric
+- D) Symmetric — the same secret key encrypts and decrypts
+
+**Q24** (1 mark)
+Why does HTTPS/TLS use _both_ asymmetric and symmetric cryptography?
+- A) Asymmetric crypto safely agrees on a shared session key; fast symmetric crypto (e.g. AES) then encrypts the actual data
+- B) Symmetric crypto exchanges the keys; asymmetric crypto encrypts the bulk data because it is faster
+- C) For redundancy — if one breaks, the other still protects the data
+- D) Browsers cannot run AES without a public key
+
+**Q25** (1 mark)
+When you log in to a server with an SSH key pair, which file must _never_ leave your own machine?
+- A) Your public key (`id_ed25519.pub`)
+- B) The server's `authorized_keys` file
+- C) Your private key (`id_ed25519`)
+- D) The `known_hosts` file
