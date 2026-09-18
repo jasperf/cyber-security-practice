@@ -167,6 +167,14 @@ Triple DES is still in limited use today with an effective key strength of about
 
 **Key ideas:** **Symmetric** crypto uses one shared secret key to both encrypt and decrypt — fast, but both sides must somehow get that key safely first. **Asymmetric** (public-key) crypto uses a matched **key pair**: a **public key** anyone may have, which only locks (or verifies signatures), and a **private key** that never leaves its owner, which unlocks (or signs). It is much slower, so real protocols like TLS and SSH are _hybrid_: asymmetric crypto sets up a shared key, then symmetric crypto (AES, ChaCha20) protects the data.
 
+**Worked example — toy RSA with tiny numbers:**
+
+1. **Bob makes his keys.** He picks two primes, 3 and 11, and multiplies them: **n = 33**. His **public key** is (e = 3, n = 33), which he gives to everyone. His **private key** is (d = 7, n = 33), which he keeps secret.
+2. **Alice encrypts** the message **4** with Bob's public key: 4³ = 64, and 64 mod 33 = **31**. She sends 31.
+3. **Bob decrypts** with his private key: 31⁷ mod 33 = **4** ✓
+
+**mod** means "the remainder after dividing": 64 ÷ 33 = 1 remainder 31, so 64 mod 33 = 31. A clock works the same way — 15:00 is 3 o'clock because 15 mod 12 = 3. Eve sees 31 and knows the public key (3, 33). To find the private key 7 she must first factor 33 = 3 × 11 — trivial here, but real RSA uses an _n_ about 600 digits long that nobody can factor in any practical time. That difficulty is what makes RSA secure. Try it in Python: `pow(4, 3, 33)` → 31, then `pow(31, 7, 33)` → 4.
+
 ### Questions
 
 **Q22** (1 mark)

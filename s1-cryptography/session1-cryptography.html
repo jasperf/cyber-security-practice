@@ -48,6 +48,9 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
 .section-header .sub-label { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 .info-box { background: var(--surface2); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 12px 16px; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.65; }
 .info-box strong, .info-box em { color: var(--text); }
+.info-box code { font-family: var(--font-mono); background: var(--surface); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; font-size: 0.86em; color: var(--text); }
+.info-box ol, .info-box ul { margin: 6px 0 6px 20px; }
+.info-box .ex-title { color: var(--text); font-weight: 600; margin-bottom: 4px; }
 .q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; transition: border-color 0.3s; animation: slideIn 0.35s ease both; }
 .q-card.answered-correct { border-color: var(--correct); }
 .q-card.answered-wrong { border-color: var(--wrong); }
@@ -676,6 +679,15 @@ body::before { content: ''; position: fixed; inset: 0; background-image: url("da
     </div>
   </div>
   <div class="info-box"><strong>Symmetric</strong> crypto uses one shared secret key to both encrypt and decrypt &mdash; fast, but both sides must somehow get that key safely first. <strong>Asymmetric</strong> (public-key) crypto uses a matched <strong>key pair</strong>: a <strong>public key</strong> anyone may have, which only locks (or verifies signatures), and a <strong>private key</strong> that never leaves its owner, which unlocks (or signs). It is much slower, so real protocols like TLS and SSH are <em>hybrid</em>: asymmetric crypto sets up a shared key, then symmetric crypto (AES, ChaCha20) protects the data.</div>
+  <div class="info-box">
+    <div class="ex-title">Worked example: toy RSA with tiny numbers</div>
+    <ol>
+      <li><strong>Bob makes his keys.</strong> He picks two primes, 3 and 11, and multiplies them: <strong>n = 33</strong>. His <strong>public key</strong> is (e = 3, n = 33), which he gives to everyone. His <strong>private key</strong> is (d = 7, n = 33), which he keeps secret.</li>
+      <li><strong>Alice encrypts</strong> the message <strong>4</strong> with Bob's public key: 4&sup3; = 64, and 64 mod 33 = <strong>31</strong>. She sends 31.</li>
+      <li><strong>Bob decrypts</strong> with his private key: 31&#8311; mod 33 = <strong>4</strong> &#10003;</li>
+    </ol>
+    <strong>mod</strong> means &ldquo;the remainder after dividing&rdquo;: 64 &divide; 33 = 1 remainder 31, so 64 mod 33 = 31. A clock works the same way &mdash; 15:00 is 3 o&rsquo;clock because 15 mod 12 = 3. Eve sees 31 and knows the public key (3, 33). To find the private key 7 she must first factor 33 = 3 &times; 11 &mdash; trivial here, but real RSA uses an <em>n</em> about 600 digits long that nobody can factor in any practical time. That difficulty is what makes RSA secure. Try it in Python: <code>pow(4, 3, 33)</code> &rarr; 31, then <code>pow(31, 7, 33)</code> &rarr; 4.
+  </div>
     <div class="q-card" id="qcard-q22">
       <div class="q-header">
         <div class="q-num">Q22</div>
